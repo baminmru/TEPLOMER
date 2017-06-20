@@ -1,0 +1,20 @@
+create table DAN310SCHEMA
+(
+  ds_id        NUMBER(5) not null,
+  name         VARCHAR2(255),
+  schema_image BLOB
+)
+;
+comment on table DAN310SCHEMA
+  is 'изображение схемы подключения';
+comment on column DAN310SCHEMA.ds_id
+  is 'Идентификатор';
+comment on column DAN310SCHEMA.name
+  is 'Название схемы';
+comment on column DAN310SCHEMA.schema_image
+  is 'Картинка схемы';
+alter table DAN310SCHEMA
+  add constraint DAN310SCHEMA_PK primary key (DS_ID);
+alter table DAN310SCHEMA
+  add constraint DAN310SCHEMA_NAME unique (NAME);
+

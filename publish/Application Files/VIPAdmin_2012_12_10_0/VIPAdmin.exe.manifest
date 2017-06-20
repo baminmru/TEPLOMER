@@ -1,0 +1,316 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1">
+  <asmv1:assemblyIdentity name="VIPAdmin.exe" version="2012.12.10.0" publicKeyToken="fe4657aafadba416" language="neutral" processorArchitecture="x86" type="win32" />
+  <description asmv2:iconFile="VIPAdmin.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="VIPAdmin" version="1.0.0.29725" language="neutral" processorArchitecture="x86" />
+    <commandLine file="VIPAdmin.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the 
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward 
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Documents.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Excel.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Shared.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.AppStylistSupport.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.Misc.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.SupportDialogs.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraChart.v9.1.Design" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraGauge.v9.1.Design" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinCalcManager.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinCalcManager.v9.1.FormulaBuilder" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinChart.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinDataSource.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinDock.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinEditors.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinExplorerBar.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinGauge.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinGrid.DocumentExport.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinGrid.ExcelExport.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinGrid.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinInkProvider.Ink17.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinInkProvider.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinListBar.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinListView.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinMaskedEdit.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinPrintPreviewDialog.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinSchedule.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinSpellChecker.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinStatusBar.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinTabbedMdi.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinTabControl.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinToolbars.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinTree.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.v9.1" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.v9.1.Design" version="9.1.20091.2094" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Ink" version="1.7.2600.2180" publicKeyToken="31BF3856AD364E35" language="neutral" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="NodeEditor.dll" size="145920">
+      <assemblyIdentity name="NodeEditor" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>HtOj1Y5m3zY7yu3NvAzjZToycYQ=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PropertyGridEx.dll" size="38400">
+      <assemblyIdentity name="PropertyGridEx" version="1.0.4727.29145" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>ZRSYrfQS09FtPprmQ1jMJnP/IpQ=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SpreadsheetGear.dll" size="3061248">
+      <assemblyIdentity name="SpreadsheetGear" version="5.0.3.106" publicKeyToken="39C186F5904944EC" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>BWHCjLKdi+sO+Oa61cIZqwlppg8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="STKTVMain.dll" size="77824">
+      <assemblyIdentity name="STKTVMain" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>1N2G6UN+5Tt7ErXoyXvDzeiwUp4=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="VIPAdmin.exe" size="206336">
+      <assemblyIdentity name="VIPAdmin" version="1.0.0.29725" language="neutral" processorArchitecture="x86" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>2DVo5Ywu64Z8s7jLBj9FaoRAn2A=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Config.xml" size="204" writeableType="applicationData">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>CdxmPFQRgFOi81xglG1WXbuIOR8=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="edit.jpg" size="1055">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>8wpy6IUOTVVTpYTR1m/iFGpwZQA=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="VIPAdmin.exe.config" size="166">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>KDOcGS+YYGVmbcFss+8rD3oycJ4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="VIPAdmin.ico" size="766">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>Hm7pBxJKaopJS7lT/66HJemOKAY=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=ASTRUM0\bami" issuerKeyHash="05693ecae47d6f139ee61c5c80494a96cf4b205a" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>mDbnsMGAOocIqKa9VCg0plLlguo=</DigestValue></Reference></SignedInfo><SignatureValue>J0W/3XUgdp9x/bR+d5IMFv0Mz0tE97ALwBA2U+r95Vo7E1gOlAAmeRhwhsE7yfQZsWZxraKro7useqlZn5luBL+NmOZNNkJLPfRLBvOEel8jlX38LxysavNkQP9HlZLT8vI8MidtDkk82Pesx77OHuLoqFEJZCniNpiSwN2zAdE=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>1Qc+TjU3NSCXr0Pr/FOmXKlrYFXSo32NnvoP+OasEjn9HQgRDh0Fh92CDuw4PAYpTIGaWWbumXCq0hsxTtoNfanSurfowIxYQDkTEk7sFq/b6YClsnY6mWYfZGcx4KQWrzWPV7YUhP6tKf0YEksgvTTsiyg93kDUgxrt6oyB9O0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="ea82e552a6342854bda6a808873a80c1b0e73698" Description="" Url=""><as:assemblyIdentity name="VIPAdmin.exe" version="2012.12.10.0" publicKeyToken="fe4657aafadba416" language="neutral" processorArchitecture="x86" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=ASTRUM0\bami</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>Ias15CRN2YHOUH2uH45MIk4wguM=</DigestValue></Reference></SignedInfo><SignatureValue>LQRHU8BXVANWzuWOB/Jw7bk4rRBAG5HIn9TDkwddtvLlQbOY+N8/iOQlY+hFFcxVNgLiIsQYEx56beq1RixUposZ0k4581jIUzXIOLxr0pc0pMXHqu2GISQEmgOw5u5kBzUFmKuji454pAMWT1DLInfYMt/9chfzXv/KCD3zlqE=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>1Qc+TjU3NSCXr0Pr/FOmXKlrYFXSo32NnvoP+OasEjn9HQgRDh0Fh92CDuw4PAYpTIGaWWbumXCq0hsxTtoNfanSurfowIxYQDkTEk7sFq/b6YClsnY6mWYfZGcx4KQWrzWPV7YUhP6tKf0YEksgvTTsiyg93kDUgxrt6oyB9O0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIByTCCATKgAwIBAgIQG3jmrI8MeYBLLB1zB/BwHDANBgkqhkiG9w0BAQUFADAjMSEwHwYDVQQDHhgAQQBTAFQAUgBVAE0AMABcAGIAYQBtAGkwHhcNMTIxMjEwMTMzNzE1WhcNMTMxMjEwMTkzNzE1WjAjMSEwHwYDVQQDHhgAQQBTAFQAUgBVAE0AMABcAGIAYQBtAGkwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANUHPk41NzUgl69D6/xTplypa2BV0qN9jZ76D/jmrBI5/R0IEQ4dBYfdgg7sODwGKUyBmllm7plwqtIbMU7aDX2p0rq36MCMWEA5ExJO7Bav2+mApbJ2OplmH2RnMeCkFq81j1e2FIT+rSn9GBJLIL007IsoPd5A1IMa7eqMgfTtAgMBAAEwDQYJKoZIhvcNAQEFBQADgYEAxXWodrNuoqYg8UUKekmJ8MqGw7P5OOL05uAGMo95/4y20OBWIvVe8mUtO3RtzicU1mCqicYxTd3aaIh7kDlSxkebsQOr6nHeE4LbPYbLH1EIBzGVmk12mUHmgsgUg2QzeNhXInbe8+sNVfe9SIkAqjZ6431q0z/CTD2ftNrAnr0=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

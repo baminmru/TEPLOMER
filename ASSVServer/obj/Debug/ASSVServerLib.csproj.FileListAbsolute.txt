@@ -1,0 +1,27 @@
+C:\bami\Service_2.2_oracle_provider\ASSVServer\obj\Debug\ResolveAssemblyReference.cache
+C:\bami\Service_2.2_oracle_provider\ASSVServer\obj\Debug\ASSVServerLib.dll
+C:\bami\Service_2.2_oracle_provider\ASSVServer\obj\Debug\ASSVServerLib.pdb
+C:\bami\projects\szt\Service_2.2_oracle_provider_german\ASSVServer\obj\Debug\ASSVServerLib.csprojResolveAssemblyReference.cache
+C:\bami\projects\szt\Service_2.2_oracle_provider_german\ASSVServer\obj\Debug\ASSVServerLib.dll
+C:\bami\projects\szt\Service_2.2_oracle_provider_german\ASSVServer\obj\Debug\ASSVServerLib.pdb
+C:\bami\Service_2.2_oracle_provider_german\ASSVServer\obj\Debug\ASSVServerLib.dll
+C:\bami\Service_2.2_oracle_provider_german\ASSVServer\obj\Debug\ASSVServerLib.pdb
+C:\bami\Service_2.2_oracle_provider_german\ASSVServer\obj\Debug\ASSVServerLib.csprojResolveAssemblyReference.cache
+C:\LATIR\Generated\Generated Dlls\ConfigDrv941.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrv942.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrv943.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrvMAGIKA.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrvMC601.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrvMT.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrvTEM104.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrvTSRV02.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrvTSRV.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrvVKT4.xml
+C:\LATIR\Generated\Generated Dlls\ConfigDrvVKT7.xml
+C:\LATIR\Generated\Generated Dlls\ASSVServiceCFG.xml
+C:\LATIR\Generated\Generated Dlls\ASSVServerLib.dll.config
+C:\LATIR\Generated\Generated Dlls\ASSVServerLib.dll
+C:\LATIR\Generated\Generated Dlls\ASSVServerLib.pdb
+C:\bami\TEPLOMER\ASSVServer\obj\Debug\ASSVServerLib.dll
+C:\bami\TEPLOMER\ASSVServer\obj\Debug\ASSVServerLib.pdb
+C:\bami\TEPLOMER\ASSVServer\obj\Debug\ASSVServerLib.csprojResolveAssemblyReference.cache

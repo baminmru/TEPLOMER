@@ -1,0 +1,43 @@
+create table WEBREQEST
+(
+  webreqestid NUMBER(18) not null,
+  id_bd       NUMBER(5) not null,
+  processed   NUMBER(1) default 0,
+  ccurr       VARCHAR2(1) default '0',
+  chour       VARCHAR2(1) default '0',
+  c24         VARCHAR2(1) default '0',
+  csum        VARCHAR2(1) default '0',
+  dfromhour   DATE,
+  dfrom24     DATE,
+  dtohour     DATE,
+  dto24       DATE
+)
+;
+comment on table WEBREQEST
+  is 'Запрос на опрос устройств';
+comment on column WEBREQEST.id_bd
+  is '->BDEVICES';
+comment on column WEBREQEST.processed
+  is '0 - в очереди  1 - идет опрос 2 - отработан';
+comment on column WEBREQEST.ccurr
+  is '1 - опрашивать текущие';
+comment on column WEBREQEST.chour
+  is '1 - опрашивать часовые';
+comment on column WEBREQEST.c24
+  is '1 - опрашивать суточные';
+comment on column WEBREQEST.csum
+  is '1 - опрашивать итоговые';
+comment on column WEBREQEST.dfromhour
+  is 'Дата начала опроса часовых';
+comment on column WEBREQEST.dfrom24
+  is 'Дата начала опроса  суточных';
+comment on column WEBREQEST.dtohour
+  is 'Дата завершения опроса часовых';
+comment on column WEBREQEST.dto24
+  is 'Дата завершения опроса суточных';
+alter table WEBREQEST
+  add constraint WEBREQUEST_PK primary key (WEBREQESTID);
+alter table WEBREQEST
+  add constraint WEBREQEST_BDEV foreign key (ID_BD)
+  references BDEVICES (ID_BD);
+

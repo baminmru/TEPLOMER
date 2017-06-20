@@ -1,0 +1,13 @@
+C:\bami\TEPLOMER\Drv941.20\obj\Debug\Drv941_20.vbprojResolveAssemblyReference.cache
+C:\bami\TEPLOMER\Drv941.20\obj\Debug\Drv941_20.vbproj.GenerateResource.Cache
+C:\bami\TEPLOMER\Drv941.20\bin\Debug\STKTVMain.dll
+C:\bami\TEPLOMER\Drv941.20\bin\Debug\Oracle.ManagedDataAccess.dll
+C:\bami\TEPLOMER\Drv941.20\bin\Debug\STKTVMain.pdb
+C:\bami\TEPLOMER\Drv941.20\bin\Debug\STKTVMain.xml
+C:\bami\TEPLOMER\Drv941.20\bin\Debug\Drv941_2.dll
+C:\bami\TEPLOMER\Drv941.20\bin\Debug\Drv941_2.pdb
+C:\bami\TEPLOMER\Drv941.20\bin\Debug\Drv941_2.xml
+C:\bami\TEPLOMER\Drv941.20\obj\Debug\Drv941_2.Resources.resources
+C:\bami\TEPLOMER\Drv941.20\obj\Debug\Drv941_2.dll
+C:\bami\TEPLOMER\Drv941.20\obj\Debug\Drv941_2.xml
+C:\bami\TEPLOMER\Drv941.20\obj\Debug\Drv941_2.pdb

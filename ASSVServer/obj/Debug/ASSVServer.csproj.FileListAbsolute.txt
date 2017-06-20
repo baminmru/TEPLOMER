@@ -1,0 +1,6 @@
+C:\bami\Service_2.2_oracle_provider\ASSVServer\obj\Debug\ResolveAssemblyReference.cache
+C:\LATIR\Generated\Generated Dlls\ASSVServer.dll
+C:\LATIR\Generated\Generated Dlls\ASSVServer.pdb
+C:\bami\Service_2.2_oracle_provider\ASSVServer\obj\Debug\ASSVServer.dll
+C:\bami\Service_2.2_oracle_provider\ASSVServer\obj\Debug\ASSVServer.pdb
+C:\LATIR\Generated\Generated Dlls\ASSVServer.dll.config

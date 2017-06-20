@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>DotSpatial.Projections</id>
+    <version>1.0.2011.52</version>
+    <title>DotSpatial.Projections</title>
+    <authors>DotSpatial Team</authors>
+    <owners>DotSpatial Team</owners>
+    <licenseUrl>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</licenseUrl>
+    <projectUrl>http://dotspatial.codeplex.com/wikipage?title=DotSpatial.Projections&amp;referringTitle=Documentation</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=dotspatial&amp;DownloadId=246554</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>The DotSpatial.Projections library is a port of the popular proj4 C++ library to C# .Net</description>
+    <summary>The DotSpatial.Projections library is a port of the popular proj4 C++ library to C# .Net</summary>
+    <tags>Spatial GIS DotSpatial</tags>
+  </metadata>
+</package>

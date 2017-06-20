@@ -1,0 +1,46 @@
+﻿Выполняется установка сборки 'C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.InstallLog
+   assemblypath = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe
+Устанавливается служба STKServiceModem...
+Создается исходный EventLog STKServiceModem в журнале Application...
+Выполняется откат для сборки 'C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.InstallLog
+   assemblypath = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe
+Восстанавливается исходное состояние журнала событий для источника STKServiceModem.
+При выполнении программы установки System.Diagnostics.EventLogInstaller на этапе отката возникло исключение.
+System.Security.SecurityException: Источник не найден, но не удалось выполнить поиск по нескольким или всем журналам событий.  Недоступные журналы: Security.
+На этапе отката процедуры установки возникло исключение. Это исключение будет проигнорировано, и откат будет продолжен. Однако после завершения отката компьютер может не вернуться полностью в исходное состояние.
+Выполняется установка сборки 'C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.InstallLog
+   assemblypath = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe
+Устанавливается служба STKServiceModem...
+Служба STKServiceModem успешно установлена.
+Создается исходный EventLog STKServiceModem в журнале Application...
+Выполняется фиксация сборки 'C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.InstallLog
+   assemblypath = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe
+Выполняется удаление сборки 'C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.InstallLog
+   assemblypath = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe
+Выполняется удаление источника EventLog STKServiceModem.
+При выполнении программы установки System.Diagnostics.EventLogInstaller во время установки возникло исключение.
+System.Security.SecurityException: Запрошенный доступ к реестру запрещен.
+При удалении из системы возникло исключение. Это исключение будет проигнорировано, и удаление из системы будет продолжено. Однако после завершения удаления данное приложение может оказаться не полностью удаленным.
+Выполняется удаление сборки 'C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe'.
+Затронуты следующие параметры:
+   logtoconsole = 
+   logfile = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.InstallLog
+   assemblypath = C:\bami\Service_2.2_oracle_provider_german\STKServiceModem\bin\Debug\STKServiceModem.exe
+Выполняется удаление источника EventLog STKServiceModem.
+Выполняется удаление службы STKServiceModem из системы...
+Служба STKServiceModem успешно удалена из системы.

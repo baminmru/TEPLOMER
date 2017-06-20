@@ -1,0 +1,51 @@
+create table WEBREPORT
+(
+  webreportid NUMBER not null,
+  createdate  DATE default sysdate,
+  usersid     NUMBER not null,
+  id_bd       NUMBER not null,
+  id_ptype    NUMBER not null,
+  dfrom       DATE not null,
+  dto         DATE not null,
+  templateid  NUMBER,
+  reportfile  VARCHAR2(500),
+  reportready NUMBER(1) default 0,
+  reportmsg   VARCHAR2(128)
+)
+;
+comment on table WEBREPORT
+  is 'запрос и результат отчета для WEB  подсистемы';
+comment on column WEBREPORT.webreportid
+  is 'уникальный идентификатор';
+comment on column WEBREPORT.createdate
+  is 'дата создания запроса';
+comment on column WEBREPORT.usersid
+  is 'Пользователь';
+comment on column WEBREPORT.id_bd
+  is 'устройство';
+comment on column WEBREPORT.id_ptype
+  is 'тип архива';
+comment on column WEBREPORT.dfrom
+  is 'дата С';
+comment on column WEBREPORT.dto
+  is 'дата По';
+comment on column WEBREPORT.templateid
+  is 'id шаблона';
+comment on column WEBREPORT.reportfile
+  is 'имя файла отчета';
+comment on column WEBREPORT.reportready
+  is 'отчет готов';
+comment on column WEBREPORT.reportmsg
+  is 'сообщение модуля отчетов';
+alter table WEBREPORT
+  add constraint WEBREPORT_PK primary key (WEBREPORTID);
+alter table WEBREPORT
+  add constraint WEBREPORT_DEV foreign key (ID_BD)
+  references BDEVICES (ID_BD);
+alter table WEBREPORT
+  add constraint WEBREPORT_PTYPE foreign key (ID_PTYPE)
+  references PARAMTYPE (ID_TYPE);
+alter table WEBREPORT
+  add constraint WEBREPORT_USR foreign key (USERSID)
+  references USERS (USERSID);
+

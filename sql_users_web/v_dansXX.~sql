@@ -1,0 +1,83 @@
+drop view v_dansh
+;
+create view v_dansh as
+  select 
+  ID_BD ID_BD2,
+count(*) L_cnt,
+to_char(dcounter,'YYYY/MM/DD HH24') DAT,
+avg(dans.tair1) as L_tair1  
+,avg(dans.t1)   as L_t1  
+,avg(dans.t2)   as L_t2  
+,avg(dans.t3)   as L_t3  
+,avg(dans.t4)   as L_t4  
+,avg(dans.t5  ) as L_t5  
+,avg(dans.t6  ) as L_t6             
+,avg(dans.G1  ) as L_G1 
+,avg(dans.G2  ) as L_G2  
+,avg(dans.G3  ) as L_G3 
+ ,avg(dans.G4  ) as L_G4  
+ ,avg(dans.G5  ) as L_G5  
+ ,avg(dans.G6  ) as L_G6                        
+ ,avg(dans.v1  ) as L_v1  
+ ,avg(dans.v2  ) as L_v2  
+ ,avg(dans.v3  ) as L_v3  
+ ,avg(dans.v4  ) as L_v4  
+ ,avg(dans.v5  ) as L_v5  
+ ,avg(dans.v6  ) as L_v6             
+ ,avg(dans.Q1  ) as L_Q1  
+ ,avg(dans.Q2  ) as L_Q2  
+ ,avg(dans.Q3  ) as L_Q3  
+ ,avg(dans.Q4  ) as L_Q4                        
+ ,avg(dans.p1  ) as L_p1  
+ ,avg(dans.p2  ) as L_p2  
+ ,avg(dans.p3  ) as L_p3  
+ ,avg(dans.p4  ) as L_p4  
+ ,avg(dans.p5  ) as L_p5 
+  ,avg(dans.p6  ) as L_p6
+  from datacurr dans
+  where id_ptype=1
+  group by ID_BD,to_char(dcounter,'YYYY/MM/DD HH24');
+  
+drop view v_dansd
+;
+create view v_dansd as
+  select 
+  ID_BD  ID_BD2,
+count(*) L_cnt,
+to_char(dcounter,'YYYY/MM/DD') DAT,
+avg(dans.tair1) as L_tair1  
+,avg(dans.t1)   as L_t1  
+,avg(dans.t2)   as L_t2  
+,avg(dans.t3)   as L_t3  
+,avg(dans.t4)   as L_t4  
+,avg(dans.t5  ) as L_t5  
+,avg(dans.t6  ) as L_t6             
+,avg(dans.G1  ) as L_G1 
+,avg(dans.G2  ) as L_G2  
+,avg(dans.G3  ) as L_G3 
+ ,avg(dans.G4  ) as L_G4  
+ ,avg(dans.G5  ) as L_G5  
+ ,avg(dans.G6  ) as L_G6                        
+ ,avg(dans.v1  ) as L_v1  
+ ,avg(dans.v2  ) as L_v2  
+ ,avg(dans.v3  ) as L_v3  
+ ,avg(dans.v4  ) as L_v4  
+ ,avg(dans.v5  ) as L_v5  
+ ,avg(dans.v6  ) as L_v6             
+ ,avg(dans.Q1  ) as L_Q1  
+ ,avg(dans.Q2  ) as L_Q2  
+ ,avg(dans.Q3  ) as L_Q3  
+ ,avg(dans.Q4  ) as L_Q4                        
+ ,avg(dans.p1  ) as L_p1  
+ ,avg(dans.p2  ) as L_p2  
+ ,avg(dans.p3  ) as L_p3  
+ ,avg(dans.p4  ) as L_p4  
+ ,avg(dans.p5  ) as L_p5 
+  ,avg(dans.p6  ) as L_p6
+  from datacurr dans
+  where id_ptype=1
+  group by ID_BD,to_char(dcounter,'YYYY/MM/DD');
+  
+  
+
+

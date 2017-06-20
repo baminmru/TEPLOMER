@@ -1,0 +1,5 @@
+C:\LATIR\Generated\Generated Dlls\XRServer.dll
+C:\LATIR\Generated\Generated Dlls\XRServer.pdb
+C:\bami\Projects\FRTT\FRTT_XRServer\XRServer\obj\Release\XRServer.csprojResolveAssemblyReference.cache
+C:\bami\Projects\FRTT\FRTT_XRServer\XRServer\obj\Release\XRServer.dll
+C:\bami\Projects\FRTT\FRTT_XRServer\XRServer\obj\Release\XRServer.pdb

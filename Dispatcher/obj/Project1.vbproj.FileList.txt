@@ -1,0 +1,10 @@
+.\bin\SinglePort.exe
+.\bin\SinglePort.pdb
+.\bin\SinglePort.xml
+obj\Debug\ResolveAssemblyReference.cache
+obj\Debug\SinglePort.Dialog.resources
+obj\Debug\SinglePort.Form1.resources
+obj\Debug\Project1.vbproj.GenerateResource.Cache
+obj\Debug\SinglePort.exe
+obj\Debug\SinglePort.xml
+obj\Debug\SinglePort.pdb
