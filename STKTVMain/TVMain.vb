@@ -806,10 +806,13 @@ Public Class TVMain
 
         If Not TVD Is Nothing Then
 
+            SaveLog(id_bd, 0, "??", 1, "Загружен " + DrvStr)
 
             TVD.DB = Me
 
             TVD.DeviceID = id_bd
+
+
 
             TVD.ServerIp = IPstr
             TVD.BaudRate = cspeed 'Int(node.Attributes.GetNamedItem("BaudRate").Value)

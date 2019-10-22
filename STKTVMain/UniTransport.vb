@@ -939,9 +939,9 @@ Public Class ModemTransport
             If Port.IsOpen Then
                 SendEvent(UnitransportAction.Connecting, "")
 
-                Port.Handshake = Handshake.None
-                Port.ReadTimeout = 2000
-                Port.WriteTimeout = 2000
+                'Port.Handshake = Handshake.None
+                'Port.ReadTimeout = 2000
+                'Port.WriteTimeout = 2000
 
 
                 LOG("RTS =1")
@@ -1017,13 +1017,13 @@ Public Class ModemTransport
                     System.Threading.Thread.Sleep(SleepTime(1000))
                     WaitOK("")
 
-                    WriteS("AT+CBST=71,0,1" & vbCrLf)
-                    System.Threading.Thread.Sleep(SleepTime(1000))
-                    If WaitOK("") = False Then
-                        WriteS("AT+CBST=7,0,1" & vbCrLf)
-                        System.Threading.Thread.Sleep(SleepTime(1000))
-                        WaitOK("")
-                    End If
+                    'WriteS("AT+CBST=71,0,1" & vbCrLf)
+                    'System.Threading.Thread.Sleep(SleepTime(1000))
+                    'If WaitOK("") = False Then
+                    '    WriteS("AT+CBST=7,0,1" & vbCrLf)
+                    '    System.Threading.Thread.Sleep(SleepTime(1000))
+                    '    WaitOK("")
+                    'End If
 
                 End If
 

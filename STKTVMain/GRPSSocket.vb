@@ -20,6 +20,8 @@ Public MustInherit Class GRPSSocket
         End Get
     End Property
 
+    Public ID_BD As Integer = 0
+
     Public Overridable ReadOnly Property LastRcvTime As Date
         Get
             Return dLastRcv
@@ -86,8 +88,16 @@ Public MustInherit Class GRPSSocket
 
         CheckLog()
         If m_LogEnabled Then
-            NLog.GlobalDiagnosticsContext.Set("counter", "_" & callerID & "_GRPS")
-            NLog.GlobalDiagnosticsContext.Set("id", callerID)
+
+            If ID_BD <> 0 Then
+                NLog.GlobalDiagnosticsContext.Set("counter", "_" & ID_BD & "_GRPS")
+                NLog.GlobalDiagnosticsContext.Set("id", ID_BD)
+            Else
+                NLog.GlobalDiagnosticsContext.Set("counter", "_" & callerID & "_GRPS")
+                NLog.GlobalDiagnosticsContext.Set("id", callerID)
+            End If
+
+
             'Dim ep As String = ""
 
             'If Not IPSocket Is Nothing Then

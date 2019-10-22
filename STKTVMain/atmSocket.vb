@@ -18,8 +18,15 @@ Public Class atmSocket
 
         CheckLog()
         If m_LogEnabled Then
-            NLog.GlobalDiagnosticsContext.Set("counter", "_" & callerID & "_ATM")
-            NLog.GlobalDiagnosticsContext.Set("id", callerID)
+
+            If ID_BD <> 0 Then
+                NLog.GlobalDiagnosticsContext.Set("counter", "_" & ID_BD & "_ATM")
+                NLog.GlobalDiagnosticsContext.Set("id", ID_BD)
+            Else
+                NLog.GlobalDiagnosticsContext.Set("counter", "_" & callerID & "_ATM")
+                NLog.GlobalDiagnosticsContext.Set("id", callerID)
+            End If
+
 
             Logger.Info(s)
         End If

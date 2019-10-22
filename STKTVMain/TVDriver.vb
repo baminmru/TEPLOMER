@@ -352,7 +352,9 @@ Public MustInherit Class TVDriver
         End If
         MyTransport.ID_BD = DeviceID
 
-
+        If Not aSocket Is Nothing Then
+            aSocket.ID_BD = DeviceID
+        End If
 
         Return MyTransport.Connect()
     End Function

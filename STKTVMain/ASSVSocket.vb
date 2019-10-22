@@ -18,8 +18,13 @@ Public Class ASSVSocket
 
         CheckLog()
         If m_LogEnabled Then
-            NLog.GlobalDiagnosticsContext.Set("counter", "_" & callerID & "_ASSV")
-            NLog.GlobalDiagnosticsContext.Set("id", callerID)
+            If ID_BD <> 0 Then
+                NLog.GlobalDiagnosticsContext.Set("counter", "_" & ID_BD & "_ASSV")
+                NLog.GlobalDiagnosticsContext.Set("id", ID_BD)
+            Else
+                NLog.GlobalDiagnosticsContext.Set("counter", "_" & callerID & "_ASSV")
+                NLog.GlobalDiagnosticsContext.Set("id", callerID)
+            End If
 
             Logger.Info(s)
         End If
