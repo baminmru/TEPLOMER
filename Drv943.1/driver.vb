@@ -785,7 +785,7 @@ Public Class driver
             block.data(6) = 0
             block.data(7) = 0
             Arch.DateArch = New DateTime(ArchYear, ArchMonth, ArchDay, ArchHour, 0, 0)
-            Arch.DateArch = Arch.DateArch.AddSeconds(-1)
+            'Arch.DateArch = Arch.DateArch.AddSeconds(-1)
 
             Arch.archType = archType_hour
 
@@ -798,7 +798,7 @@ Public Class driver
 
         If (ArchType = archType_day) Then
             Arch.DateArch = New DateTime(ArchYear, ArchMonth, ArchDay, 0, 0, 0)
-            Arch.DateArch = Arch.DateArch.AddSeconds(-1)
+            'Arch.DateArch = Arch.DateArch.AddSeconds(-1)
             block.data(0) = ArchYear - 2000
             block.data(1) = ArchMonth Mod 13
             block.data(2) = ArchDay Mod 32
@@ -952,7 +952,7 @@ tv2_arch:
             block.data(6) = 0
             block.data(7) = 0
             Arch.DateArch = New DateTime(ArchYear, ArchMonth, ArchDay, ArchHour, 0, 0)
-            Arch.DateArch = Arch.DateArch.AddSeconds(-1)
+            'Arch.DateArch = Arch.DateArch.AddSeconds(-1)
             Arch.archType = archType_hour
         End If
 
@@ -966,7 +966,7 @@ tv2_arch:
             block.data(6) = 0
             block.data(7) = 0
             Arch.DateArch = New DateTime(ArchYear, ArchMonth, ArchDay, 0, 0, 0)
-            Arch.DateArch = Arch.DateArch.AddSeconds(-1)
+            'Arch.DateArch = Arch.DateArch.AddSeconds(-1)
             Arch.archType = archType_day
         End If
 

@@ -728,14 +728,18 @@ READMORE:
                     MyTransport.CleanPort()
                     MyTransport.Write(buf, 0, 15)
 
-                    WaitForData()
 
                     Dim btr As Long
                     Dim sz As Long = 0
+                    Dim tryCnt As Integer = 5
+                    ok = False
+                    While tryCnt > 0 And ok = False
+                        tryCnt -= 1
+                        WaitForData()
                     btr = MyTransport.BytesToRead
                     While btr > 0
                         MyTransport.Read(buf, sz, btr)
-                        System.Threading.Thread.Sleep(CalcInterval(20))
+                            System.Threading.Thread.Sleep(CalcInterval(200))
                         sz += btr
                         btr = MyTransport.BytesToRead
                     End While
@@ -746,8 +750,6 @@ READMORE:
                                 ok = False
                                 retsum = EncodeError(buf(2))
                             Else
-
-
                                 With Arch
                                     .M1 = GetFlt(buf, 3 + 118 - 1)
                                     .T1 = 0.01 * GetInt(buf, 3 + 122 - 1) '
@@ -882,13 +884,26 @@ READMORE:
                                 Arch.DateArch = dt2
                                 ok = True
                             End If
-                        Else
-                            SequenceErrorCount += 1
+
+                                'Else
+                                '    SequenceErrorCount += 1
                         End If
-                    Else
+
+                            'Else
+                            '    SequenceErrorCount += 1
+                        End If
+                        If ok = False Then
+                            System.Threading.Thread.Sleep(1500)
+                        End If
+                    End While
+                    If ok = False Then
                         SequenceErrorCount += 1
                     End If
+
+
+
                 End If
+
 
                 If ArchType = archType_day Then
 
@@ -922,10 +937,16 @@ READMORE:
 
                     Dim btr As Long
                     Dim sz As Long = 0
+                    Dim tryCnt As Integer = 5
+                    ok = False
+                    While tryCnt > 0 And ok = False
+                        tryCnt -= 1
+                        WaitForData()
+
                     btr = MyTransport.BytesToRead
                     While btr > 0
                         MyTransport.Read(buf, sz, btr)
-                        System.Threading.Thread.Sleep(CalcInterval(20))
+                            System.Threading.Thread.Sleep(CalcInterval(200))
                         sz += btr
                         btr = MyTransport.BytesToRead
                     End While
@@ -1074,13 +1095,19 @@ READMORE:
                                 ok = True
                                 Arch.DateArch = dt2
                             End If
-                        Else
-                            SequenceErrorCount += 1
+                                'Else
+                                '    SequenceErrorCount += 1
                         End If
-                    Else
+                            'Else
+                            '    SequenceErrorCount += 1
+                        End If
+                        If ok = False Then
+                            System.Threading.Thread.Sleep(1500)
+                        End If
+                    End While
+                    If ok = False Then
                         SequenceErrorCount += 1
                     End If
-
 
                 End If
             End If
@@ -1151,166 +1178,178 @@ READMORE:
 
 
 
-                    WaitForData()
+
 
 
                     Dim btr As Long
                     Dim sz As Long = 0
-                    btr = MyTransport.BytesToRead
+                    Dim tryCnt As Integer = 5
+                    ok = False
+                    While tryCnt > 0 And ok = False
+                        tryCnt -= 1
+                        WaitForData()
+                        btr = MyTransport.BytesToRead
                     While btr > 0
                         MyTransport.Read(buf, sz, btr)
-                        System.Threading.Thread.Sleep(CalcInterval(20))
-                        sz += btr
+                            System.Threading.Thread.Sleep(CalcInterval(200))
+                            sz += btr
                         btr = MyTransport.BytesToRead
                     End While
-                    If sz > 0 Then
-                        If VerifySum(buf, sz) Then
-                            SequenceErrorCount = 0
-                            If sz = 5 Then
-                                ok = False
-                                retsum = EncodeError(buf(2))
-                            Else
-                                Dim Seconds As Long
-                                Dim DateArch As Date
-                                Seconds = GetLng(buf, 3 + 0)
-                                DateArch = New Date(1970, 1, 1, 0, 0, 0)
-                                DateArch = DateArch.AddSeconds(Seconds)
+                        If sz > 0 Then
+                            If VerifySum(buf, sz) Then
+                                SequenceErrorCount = 0
+                                If sz = 5 Then
+                                    ok = False
+                                    retsum = EncodeError(buf(2))
+                                Else
+                                    Dim Seconds As Long
+                                    Dim DateArch As Date
+                                    Seconds = GetLng(buf, 3 + 0)
+                                    DateArch = New Date(1970, 1, 1, 0, 0, 0)
+                                    DateArch = DateArch.AddSeconds(Seconds)
 
-                                With Arch
-                                    .M1 = GetFlt(buf, 3 + 118 - 1)
-                                    .T1 = 0.01 * GetInt(buf, 3 + 122 - 1) '
-                                    .P1 = 0.01 * GetInt(buf, 3 + 124 - 1)
+                                    With Arch
+                                        .M1 = GetFlt(buf, 3 + 118 - 1)
+                                        .T1 = 0.01 * GetInt(buf, 3 + 122 - 1) '
+                                        .P1 = 0.01 * GetInt(buf, 3 + 124 - 1)
 
-                                    .M2 = GetFlt(buf, 3 + 127 - 1)
-                                    .T2 = 0.01 * GetInt(buf, 3 + 131 - 1) '
-                                    .P2 = 0.01 * GetInt(buf, 3 + 133 - 1)
-
-
-                                    .M3 = GetFlt(buf, 3 + 136 - 1)
-                                    .T3 = 0.01 * GetInt(buf, 3 + 140 - 1) '
-                                    .P3 = 0.01 * GetInt(buf, 3 + 142 - 1)
-
-                                    .M4 = GetFlt(buf, 3 + 145 - 1)
-                                    .T4 = 0.01 * GetInt(buf, 3 + 149 - 1) '
-                                    .P4 = 0.01 * GetInt(buf, 3 + 151 - 1)
+                                        .M2 = GetFlt(buf, 3 + 127 - 1)
+                                        .T2 = 0.01 * GetInt(buf, 3 + 131 - 1) '
+                                        .P2 = 0.01 * GetInt(buf, 3 + 133 - 1)
 
 
-                                    .M5 = GetFlt(buf, 3 + 154 - 1)
-                                    .T5 = 0.01 * GetInt(buf, 3 + 158 - 1) '
-                                    .P5 = 0.01 * GetInt(buf, 3 + 160 - 1)
+                                        .M3 = GetFlt(buf, 3 + 136 - 1)
+                                        .T3 = 0.01 * GetInt(buf, 3 + 140 - 1) '
+                                        .P3 = 0.01 * GetInt(buf, 3 + 142 - 1)
+
+                                        .M4 = GetFlt(buf, 3 + 145 - 1)
+                                        .T4 = 0.01 * GetInt(buf, 3 + 149 - 1) '
+                                        .P4 = 0.01 * GetInt(buf, 3 + 151 - 1)
 
 
-                                    .M6 = GetFlt(buf, 3 + 163 - 1)
-                                    .T6 = 0.01 * GetInt(buf, 3 + 167 - 1) '
-                                    .P6 = 0.01 * GetInt(buf, 3 + 169 - 1)
+                                        .M5 = GetFlt(buf, 3 + 154 - 1)
+                                        .T5 = 0.01 * GetInt(buf, 3 + 158 - 1) '
+                                        .P5 = 0.01 * GetInt(buf, 3 + 160 - 1)
 
 
-                                    .Q1 = GetFlt(buf, 3 + 5 - 1)
-                                    .Q2 = GetFlt(buf, 3 + 9 - 1)
-
-                                    .Q3 = GetFlt(buf, 3 + 41 - 1)
-                                    .Q4 = GetFlt(buf, 3 + 45 - 1)
-
-                                    .Q5 = GetFlt(buf, 3 + 77 - 1)
-                                    .Q6 = GetFlt(buf, 3 + 81 - 1)
+                                        .M6 = GetFlt(buf, 3 + 163 - 1)
+                                        .T6 = 0.01 * GetInt(buf, 3 + 167 - 1) '
+                                        .P6 = 0.01 * GetInt(buf, 3 + 169 - 1)
 
 
+                                        .Q1 = GetFlt(buf, 3 + 5 - 1)
+                                        .Q2 = GetFlt(buf, 3 + 9 - 1)
 
+                                        .Q3 = GetFlt(buf, 3 + 41 - 1)
+                                        .Q4 = GetFlt(buf, 3 + 45 - 1)
 
-
-                                    .Errtime = GetLng(buf, 3 + 21 - 1) / 60
-                                    .ErrtimeH = .Errtime / 60
-                                    .oktime = GetLng(buf, 3 + 17 - 1) / 60
-
-
-                                    Dim HC1 As Long, HC2 As Long, HC3 As Long
-                                    Dim aHC1 As Long, aHC2 As Long, aHC3 As Long
-
-                                    HC1 = GetLng(buf, 3 + 25 - 1)
-                                    HC2 = GetLng(buf, 3 + 29 - 1)
-                                    HC3 = GetLng(buf, 3 + 33 - 1)
-
-
-                                    .MsgHC = ""
-                                    If HC1 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС1HC1;"
-                                    End If
-                                    If HC2 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС1HC2;"
-                                    End If
-
-                                    If HC3 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС1HC3;"
-                                    End If
-
-
-
-
-                                    aHC1 = GetLng(buf, 3 + 61 - 1)
-                                    aHC2 = GetLng(buf, 3 + 65 - 1)
-                                    aHC3 = GetLng(buf, 3 + 69 - 1)
-
-                                    If aHC1 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС2HC1;"
-                                    End If
-                                    If aHC2 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС2HC2;"
-                                    End If
-
-                                    If aHC3 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС2HC3;"
-                                    End If
-
-                                    HC1 = HC1 + aHC1
-                                    HC2 = HC2 + aHC2
-                                    HC3 = HC3 + aHC3
+                                        .Q5 = GetFlt(buf, 3 + 77 - 1)
+                                        .Q6 = GetFlt(buf, 3 + 81 - 1)
 
 
 
 
 
-                                    aHC1 = GetLng(buf, 3 + 97 - 1)
-                                    aHC2 = GetLng(buf, 3 + 101 - 1)
-                                    aHC3 = GetLng(buf, 3 + 105 - 1)
-
-                                    If aHC1 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС3HC1;"
-                                    End If
-                                    If aHC2 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС3HC2;"
-                                    End If
-
-                                    If aHC3 > 0 Then
-                                        .MsgHC = .MsgHC + "ТС3HC3;"
-                                    End If
-
-                                    HC1 = HC1 + aHC1
-                                    HC2 = HC2 + aHC2
-                                    HC3 = HC3 + aHC3
+                                        .Errtime = GetLng(buf, 3 + 21 - 1) / 60
+                                        .ErrtimeH = .Errtime / 60
+                                        .oktime = GetLng(buf, 3 + 17 - 1) / 60
 
 
-                                    HC = 0
-                                    If HC1 > 0 Then
-                                        HC = HC + 2 ^ 12
-                                    End If
-                                    If HC2 > 0 Then
-                                        HC = HC + 2 ^ 13
-                                    End If
+                                        Dim HC1 As Long, HC2 As Long, HC3 As Long
+                                        Dim aHC1 As Long, aHC2 As Long, aHC3 As Long
 
-                                    If HC3 > 0 Then
-                                        HC = HC + 2 ^ 14
-                                    End If
+                                        HC1 = GetLng(buf, 3 + 25 - 1)
+                                        HC2 = GetLng(buf, 3 + 29 - 1)
+                                        HC3 = GetLng(buf, 3 + 33 - 1)
 
 
-                                    .HC = HC
-                                End With
-                                Arch.DateArch = DateArch
-                                ok = True
+                                        .MsgHC = ""
+                                        If HC1 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС1HC1;"
+                                        End If
+                                        If HC2 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС1HC2;"
+                                        End If
+
+                                        If HC3 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС1HC3;"
+                                        End If
+
+
+
+
+                                        aHC1 = GetLng(buf, 3 + 61 - 1)
+                                        aHC2 = GetLng(buf, 3 + 65 - 1)
+                                        aHC3 = GetLng(buf, 3 + 69 - 1)
+
+                                        If aHC1 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС2HC1;"
+                                        End If
+                                        If aHC2 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС2HC2;"
+                                        End If
+
+                                        If aHC3 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС2HC3;"
+                                        End If
+
+                                        HC1 = HC1 + aHC1
+                                        HC2 = HC2 + aHC2
+                                        HC3 = HC3 + aHC3
+
+
+
+
+
+                                        aHC1 = GetLng(buf, 3 + 97 - 1)
+                                        aHC2 = GetLng(buf, 3 + 101 - 1)
+                                        aHC3 = GetLng(buf, 3 + 105 - 1)
+
+                                        If aHC1 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС3HC1;"
+                                        End If
+                                        If aHC2 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС3HC2;"
+                                        End If
+
+                                        If aHC3 > 0 Then
+                                            .MsgHC = .MsgHC + "ТС3HC3;"
+                                        End If
+
+                                        HC1 = HC1 + aHC1
+                                        HC2 = HC2 + aHC2
+                                        HC3 = HC3 + aHC3
+
+
+                                        HC = 0
+                                        If HC1 > 0 Then
+                                            HC = HC + 2 ^ 12
+                                        End If
+                                        If HC2 > 0 Then
+                                            HC = HC + 2 ^ 13
+                                        End If
+
+                                        If HC3 > 0 Then
+                                            HC = HC + 2 ^ 14
+                                        End If
+
+
+                                        .HC = HC
+                                    End With
+                                    Arch.DateArch = DateArch
+                                    ok = True
+                                End If
+                                'Else
+                                '    SequenceErrorCount += 1
                             End If
-                        Else
-                            SequenceErrorCount += 1
+                            'Else
+                            '    SequenceErrorCount += 1
                         End If
-                    Else
+                        If ok = False Then
+                            System.Threading.Thread.Sleep(1500)
+                        End If
+                    End While
+                    If ok = False Then
                         SequenceErrorCount += 1
                     End If
                 End If
@@ -1344,12 +1383,17 @@ READMORE:
                     'Dim i As Int16
                     'Dim j As Int16
 
-                    WaitForData()
+
 
 
                     Dim btr As Long
                     Dim sz As Long = 0
-                    btr = MyTransport.BytesToRead
+                    Dim tryCnt As Integer = 5
+                    ok = False
+                    While tryCnt > 0 And ok = False
+                        tryCnt -= 1
+                        WaitForData()
+                        btr = MyTransport.BytesToRead
                     While btr > 0
                         MyTransport.Read(buf, sz, btr)
                         System.Threading.Thread.Sleep(CalcInterval(20))
@@ -1510,10 +1554,17 @@ READMORE:
                                 ok = True
                                 Arch.DateArch = DateArch
                             End If
-                        Else
-                            SequenceErrorCount += 1
+                                'Else
+                                '    SequenceErrorCount += 1
+                            End If
+                            'Else
+                            '    SequenceErrorCount += 1
                         End If
-                    Else
+                        If ok = False Then
+                            System.Threading.Thread.Sleep(1500)
+                        End If
+                    End While
+                    If ok = False Then
                         SequenceErrorCount += 1
                     End If
 

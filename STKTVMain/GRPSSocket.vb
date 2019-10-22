@@ -1,5 +1,7 @@
 ﻿Imports System.Net.Sockets
 Imports System.Xml
+Imports NLog
+
 Public MustInherit Class GRPSSocket
 
 
@@ -58,6 +60,12 @@ Public MustInherit Class GRPSSocket
 
     Protected Shared m_LogEnabled As Boolean = False
     Protected Shared m_Inited As Boolean = False
+    Protected Shared Logger As Logger = LogManager.GetCurrentClassLogger()
+
+    Public Sub New(Optional ByVal _LogEnabled As Boolean = False)
+        m_LogEnabled = _LogEnabled
+        m_Inited = False
+    End Sub
 
     Protected Shared Sub CheckLog()
         If m_Inited Then Exit Sub
@@ -74,25 +82,28 @@ Public MustInherit Class GRPSSocket
         End Try
         m_Inited = True
     End Sub
-    Protected Sub LOG(ByVal s As String)
+    Protected Overridable Sub LOG(ByVal s As String)
 
         CheckLog()
         If m_LogEnabled Then
-        Dim ep As String = ""
+            NLog.GlobalDiagnosticsContext.Set("counter", "_" & callerID & "_GRPS")
+            NLog.GlobalDiagnosticsContext.Set("id", callerID)
+            'Dim ep As String = ""
 
-        If Not IPSocket Is Nothing Then
-            If IPSocket.Connected Then
-                ep = IPSocket.RemoteEndPoint.ToString()
-            End If
+            'If Not IPSocket Is Nothing Then
+            '    If IPSocket.Connected Then
+            '        ep = IPSocket.RemoteEndPoint.ToString()
+            '    End If
 
-        End If
+            'End If
 
-        Try
-                System.IO.File.AppendAllText(GetMyDir() + "\LOGS\" + SocketType() + "_LOG_" + Date.Now.ToString("yyyyMMdd") + "_" + callerID + ".txt", Date.Now.ToString("yyyy.MM.dd HH:mm:ss") + " (" + ep + ") " + s + vbCrLf)
-        Catch ex As Exception
+            'Try
+            '        System.IO.File.AppendAllText(GetMyDir() + "\LOGS\" + SocketType() + "_LOG_" + Date.Now.ToString("yyyyMMdd") + "_" + callerID + ".txt", Date.Now.ToString("yyyy.MM.dd HH:mm:ss") + " (" + ep + ") " + s + vbCrLf)
+            'Catch ex As Exception
 
-        End Try
-        Console.WriteLine(s)
+            'End Try
+            'Console.WriteLine(s)
+            Logger.Info(s)
         End If
     End Sub
 
@@ -126,8 +137,8 @@ Public MustInherit Class GRPSSocket
                         mHasID = True
 
 
-                        If callerID.Length > 8 Then
-                            mCallerID = mCallerID.Substring(0, 8)
+                        If callerID.Length > 15 Then
+                            mCallerID = mCallerID.Substring(0, 15)
                         End If
 
                         LOG("Caller ID=" + callerID)

@@ -3,11 +3,16 @@ Imports System.IO
 Imports System.Reflection
 Imports System.Xml
 Imports Oracle.ManagedDataAccess.Client
+Imports NLog
 
 Public Class TVMain
 
     Private Inited As Boolean
     Private m_DBTableName As String = "datacurr"
+    Private Shared Logger As Logger = LogManager.GetCurrentClassLogger()
+
+
+
 
     Public Overridable Property DBTableName() As String
         Get
@@ -94,6 +99,28 @@ Public Class TVMain
             m_LogEnabled = value
         End Set
     End Property
+    Protected Shared Function GetMyDir() As String
+        Dim s As String
+        s = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase)
+        s = s.Substring(6)
+        Return s
+    End Function
+
+
+    Protected Sub LOG(ByVal id_bd As Integer, ByVal s As String)
+        If (id_bd = 0) Then
+            NLog.GlobalDiagnosticsContext.Set("counter", "_system")
+            NLog.GlobalDiagnosticsContext.Set("id", 0)
+        Else
+            NLog.GlobalDiagnosticsContext.Set("counter", "_" & id_bd.ToString())
+            NLog.GlobalDiagnosticsContext.Set("id", id_bd)
+        End If
+
+        Logger.Info(s)
+
+        'End If
+    End Sub
+
 
     Public Property SendToTGK() As Boolean
         Get
@@ -545,7 +572,7 @@ Public Class TVMain
         cmd.Connection = connection
 
 
-        cmd.CommandText = "select npip,sysdate ServerDate from bdevices  where  ( nplock is null or nplock <sysdate ) and  transport in (0,1,2,3,4,5,6) /* and npquery=1 */  and bdevices.id_bd=" & DevID.ToString() + " "
+        cmd.CommandText = "select npip,sysdate ServerDate from bdevices  where  ( nplock is null or nplock <sysdate ) /* and  transport in (0,1,2,3,4,5,6,7)  and npquery=1 */  and bdevices.id_bd=" & DevID.ToString() + " "
 
         da.SelectCommand = cmd
         dt = New DataTable
@@ -577,7 +604,7 @@ Public Class TVMain
         cmd.Connection = connection
 
 
-        cmd.CommandText = "select npip,sysdate ServerDate from bdevices  where  ( nplock >=sysdate ) and   transport in (0,1,2,3,4,5,6) /* and npquery=1 */  and bdevices.id_bd=" + DevID.ToString() + " "
+        cmd.CommandText = "select npip,sysdate ServerDate from bdevices  where  ( nplock >=sysdate ) /* and   transport in (0,1,2,3,4,5,6)  and npquery=1 */  and bdevices.id_bd=" + DevID.ToString() + " "
 
         da.SelectCommand = cmd
         dt = New DataTable
@@ -780,6 +807,9 @@ Public Class TVMain
         If Not TVD Is Nothing Then
 
 
+            TVD.DB = Me
+
+            TVD.DeviceID = id_bd
 
             TVD.ServerIp = IPstr
             TVD.BaudRate = cspeed 'Int(node.Attributes.GetNamedItem("BaudRate").Value)
@@ -814,6 +844,9 @@ Public Class TVMain
                 Case 6
                     'm_ConnectStatus += vbCrLf & "Транспорт: модем"
                     SaveLog(id_bd, 0, "??", 1, "Транспорт: ROBUSTEL")
+                Case 7
+                    'm_ConnectStatus += vbCrLf & "Транспорт: модем"
+                    SaveLog(id_bd, 0, "??", 1, "Транспорт: ATM")
 
             End Select
 
@@ -848,10 +881,11 @@ Public Class TVMain
                 SaveLog(id_bd, 0, "??", 1, "Выделен модем на порту: " & TVD.ComPort & " Телефон:" & TVD.Phone)
             ElseIf transport = 1 Then
                 TVD.ComPort = UsePort
-            ElseIf transport = 5 Or transport = 6 Then
+            ElseIf transport = 5 Or transport = 6 Or transport = 7 Then
                 If Not aSocket Is Nothing Then
                     If transport = 5 Then SaveLog(id_bd, 0, "??", 1, "ASSV CALLER ID:" & aSocket.callerID)
                     If transport = 6 Then SaveLog(id_bd, 0, "??", 1, "ROBUSTEL CALLER ID:" & aSocket.callerID)
+                    If transport = 7 Then SaveLog(id_bd, 0, "??", 1, "ATM CALLER ID:" & aSocket.callerID)
                 End If
             Else
 
@@ -860,7 +894,7 @@ Public Class TVMain
             End If
             TVD.NPPassword = NPPassword
 
-            TVD.DeviceID = id_bd
+
 
 
             ' таймаут
@@ -1098,6 +1132,11 @@ Public Class TVMain
 
                     If dr("transport") = 6 Then
                         mGetConfigStructFromId_BD.Transport = "ROBUSTEL"
+                    End If
+
+
+                    If dr("transport") = 7 Then
+                        mGetConfigStructFromId_BD.Transport = "ATM"
                     End If
 
 
@@ -1707,8 +1746,10 @@ Public Class TVMain
     End Sub
 
     Public Function QueryExec(ByVal s As String) As Boolean
+
         Dim cmd As OracleCommand
         cmd = New OracleCommand
+        'LOG(s)
         Try
 
             cmd.CommandType = CommandType.Text
@@ -1719,8 +1760,7 @@ Public Class TVMain
             cmd.ExecuteNonQuery()
 
         Catch ex As Exception
-            Debug.Print(s + " err:")
-            Debug.Print(ex.Message)
+            LOG(0, s + " err: " + ex.Message)
             Try
                 cmd.Dispose()
             Catch ex1 As Exception
@@ -1750,10 +1790,11 @@ Public Class TVMain
         dt = New DataTable
         da = New OracleDataAdapter
         da.SelectCommand = cmd
+        'LOG(s)
         Try
             da.Fill(dt)
         Catch ex As Exception
-            Debug.Print(s + " Err:" + ex.Message)
+            LOG(0, s + " Err:" + ex.Message)
         End Try
         Try
             da.Dispose()
@@ -1777,12 +1818,14 @@ Public Class TVMain
         Try
             Port.Open()
         Catch ex As Exception
+            Logger.Error(ex)
             Return False
         End Try
         If Port.IsOpen Then
             Try
                 Port.Close()
             Catch ex As Exception
+                Logger.Error(ex)
                 Return False
             End Try
             Return True
@@ -1790,7 +1833,7 @@ Public Class TVMain
             Try
                 Port.Close()
             Catch ex As Exception
-
+                Logger.Error(ex)
             End Try
             Return False
         End If
@@ -1919,6 +1962,7 @@ Public Class TVMain
                 Return dt.Rows(0)("cinit")
             End If
         Catch ex As Exception
+            Logger.Error(ex)
             Return ""
         End Try
 
@@ -1966,16 +2010,17 @@ Public Class TVMain
         Try
             duration = DateDiff(DateInterval.Second, LastLog, DateTime.Now)
         Catch ex As Exception
-
+            Logger.Error(ex)
         End Try
 
         LastLog = DateTime.Now
         'query = "insert into logcall( ID_BD,  ID_PTYPE ,  CPORT , NSESSION,  DBEG,  DURATION,  CEXAMINE ,  CRESULT) values(" & _
         'id_bd.ToString() & "," & id_ptype.ToString() & ",'" & cport & "',0,SYSTIMESTAMP," & duration.ToString() & "," & cEXAMINE.ToString & ",'" & S180(cresult) & "')"
-        query = "insert into logcall( ID_BD,  ID_PTYPE ,  CPORT , NSESSION,  DBEG,  DURATION,  CEXAMINE ,  CRESULT) values(" & _
-        id_bd.ToString() & "," & id_ptype.ToString() & ",'" & cport & "',0," + OracleTimeStamp(LastLog) + "," & duration.ToString() & "," & cEXAMINE.ToString & ",'" & S180(cresult) & "')"
+        query = "insert into logcall( ID_BD,  ID_PTYPE ,  CPORT , NSESSION,  DBEG,  DURATION,  CEXAMINE ,  CRESULT) values(" &
+        id_bd.ToString() & "," & id_ptype.ToString() & ",'" & cport & "',0," + OracleTimeStamp(LastLog) + "," & duration.ToString() & "," & cEXAMINE.ToString & ",'" & S180(Environment.MachineName + ": " +
+         cresult) & "')"
 
-
+        LOG(id_bd, cresult)
         QueryExec(query)
 
     End Sub
@@ -1996,16 +2041,17 @@ Public Class TVMain
             End If
             
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
+            Logger.Error(ex)
         End Try
         connection = Nothing
         command = Nothing
     End Sub
 
-    
+
     Public Sub New()
+        NLog.GlobalDiagnosticsContext.Set("counter", "_system")
         Inited = Init()
     End Sub
 
-   
+
 End Class

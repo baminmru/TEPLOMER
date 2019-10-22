@@ -255,7 +255,7 @@ Public Class editTPLT_CONNECT
         '
         Me.cmbTransport.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbTransport.FormattingEnabled = True
-        Me.cmbTransport.Items.AddRange(New Object() {"MODEM", "COM", "NPORT", "VSX", "GSM Modem", "АССВ", "ROBUSTEL"})
+        Me.cmbTransport.Items.AddRange(New Object() {"MODEM", "COM", "NPORT", "VSX", "GSM Modem", "АССВ", "ROBUSTEL", "ATM"})
         Me.cmbTransport.Location = New System.Drawing.Point(234, 35)
         Me.cmbTransport.Name = "cmbTransport"
         Me.cmbTransport.Size = New System.Drawing.Size(168, 21)
@@ -500,6 +500,10 @@ Public Class editTPLT_CONNECT
             cmbTransport.Text = "ROBUSTEL"
         End If
 
+        If Item("transport") = 7 Then
+            cmbTransport.Text = "ATM"
+        End If
+
         txtPort.Text = "" & Item("ipport").ToString
         mOnInit = False
         RaiseEvent Refreshed()
@@ -560,6 +564,11 @@ Public Class editTPLT_CONNECT
             If cmbTransport.Text = "ROBUSTEL" Then
 
                 Item("transport") = 6
+            End If
+
+            If cmbTransport.Text = "ATM" Then
+
+                Item("transport") = 7
             End If
 
             Try

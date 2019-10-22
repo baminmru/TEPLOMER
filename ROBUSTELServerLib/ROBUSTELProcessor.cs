@@ -694,6 +694,7 @@ if (TvMain.Status.Contains("robustel")){
                                     ReadHOK = false;
 
                                     // все по расписанию, читаем архивы назад
+                                    tempdate = tempdate.AddHours(-numhour);
                                     for (int j = 0; j < numhour; j++)
                                     {
 
@@ -706,7 +707,7 @@ if (TvMain.Status.Contains("robustel")){
                                         {
                                             try
                                             {
-                                                tempdate = tempdate.AddHours(-1);
+                                                tempdate = tempdate.AddHours(1);
 
 
                                                 String str;
@@ -908,7 +909,8 @@ if (TvMain.Status.Contains("robustel")){
                                 {
                                     if (TvMain.LockDevice(id_bdc, 400 * num24, true))
                                     {
-                                        for (int j = 0; j < num24; j++)
+                                    tempdate = tempdate.AddDays(-num24);
+                                    for (int j = 0; j < num24; j++)
                                         {
 
                                             if (SequenceErrorCount > 2)
@@ -919,7 +921,7 @@ if (TvMain.Status.Contains("robustel")){
                                             if (TvMain.TVD.IsConnected())
                                             {
                                                 TvMain.HoldLine();
-                                                tempdate = tempdate.AddDays(-1);
+                                                tempdate = tempdate.AddDays(1);
 
                                                 String str;
                                                 if (TvMain.CheckForArch(archType_day, tempdate.Year, tempdate.Month, tempdate.Day, 0, id_bdc) == false)
@@ -1004,7 +1006,7 @@ if (TvMain.Status.Contains("robustel")){
 
                             DateTime tempdate;
                             DataTable missing;
-                            missing = TvMain.QuerySelect("select QLISTID, QDATE,PROCESSED from QLIST where id_bd=" + id_bdc.ToString() + " and id_PTYPE=3 "); 
+                            missing = TvMain.QuerySelect("select QLISTID, QDATE,PROCESSED from QLIST where id_bd=" + id_bdc.ToString() + " and id_PTYPE=3 order by QDATE asc"); 
 
                             try
                             {
@@ -1106,7 +1108,7 @@ if (TvMain.Status.Contains("robustel")){
 
                             DateTime tempdate;
                             DataTable missing;
-                            missing = TvMain.QuerySelect("select QLISTID, QDATE,PROCESSED from QLIST where id_bd=" + id_bdc.ToString() + " and id_PTYPE=4 "); 
+                            missing = TvMain.QuerySelect("select QLISTID, QDATE,PROCESSED from QLIST where id_bd=" + id_bdc.ToString() + " and id_PTYPE=4  order by QDATE asc"); 
 
                             try
                             {
@@ -1219,7 +1221,7 @@ if (TvMain.Status.Contains("robustel")){
                             int GRCount = 0;
                             int TryCount = 0;
                             DataTable missingpass;
-                            missing = TvMain.QuerySelect("select ARCHDATE,DEVNAME from missingarch where id_bd=" + id_bdc.ToString() + " and ARCHDATE>SYSDATE-32 and ARCHDATE<SYSDATE-2 / 24  and ARCHDATE<" + TvMain.OracleDate(ddd) + "  and DEVNAME like '%Час%' order by archdate desc "); // and devname not like '%Нули%'");
+                            missing = TvMain.QuerySelect("select ARCHDATE,DEVNAME from missingarch where id_bd=" + id_bdc.ToString() + " and ARCHDATE>SYSDATE-32 and ARCHDATE<SYSDATE-2 / 24  and ARCHDATE<" + TvMain.OracleDate(ddd) + "  and DEVNAME like '%Час%' order by archdate asc "); // and devname not like '%Нули%'");
 
                             try
                             {
@@ -1339,7 +1341,7 @@ if (TvMain.Status.Contains("robustel")){
                             int GRCount = 0;
                             int TryCount = 0;
                             DataTable missingpass;
-                            missing = TvMain.QuerySelect("select ARCHDATE,DEVNAME from missingarch where id_bd=" + id_bdc.ToString() + " and ARCHDATE>SYSDATE-32 and ARCHDATE<" + TvMain.OracleDate(ddd) + " and DEVNAME like '%Суточ%'  order by archdate desc "); //and devname not like '%Нули%'");
+                            missing = TvMain.QuerySelect("select ARCHDATE,DEVNAME from missingarch where id_bd=" + id_bdc.ToString() + " and ARCHDATE>SYSDATE-32 and ARCHDATE<" + TvMain.OracleDate(ddd) + " and DEVNAME like '%Суточ%'  order by archdate asc "); //and devname not like '%Нули%'");
 
                             try
                             {

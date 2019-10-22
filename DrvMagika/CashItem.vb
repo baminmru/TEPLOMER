@@ -1,4 +1,7 @@
-﻿Public Class CashItem
+﻿Imports System.Xml.Serialization
+
+<Serializable()>
+Public Class CashItem
     Public ok As Boolean
     Public Y As Integer
     Public M As Byte

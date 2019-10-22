@@ -519,7 +519,7 @@ Public Class frmMain
                                         node.LeftImages.Add(2 + cw)
                                     Case 4
                                         node.LeftImages.Add(4 + cw)
-                                    Case 5, 6
+                                    Case 5, 6, 7
                                         node.LeftImages.Add(3 + cw)
                                     Case Else
                                         node.LeftImages.Add(1 + cw)
@@ -545,7 +545,7 @@ Public Class frmMain
                                         node.LeftImages.Add(2 + cw)
                                     Case 4
                                         node.LeftImages.Add(4 + cw)
-                                    Case 5, 6
+                                    Case 5, 6, 7
                                         node.LeftImages.Add(3 + cw)
                                     Case Else
                                         node.LeftImages.Add(1 + cw)
@@ -572,7 +572,7 @@ Public Class frmMain
                                         node.LeftImages.Add(2 + cw)
                                     Case 4
                                         node.LeftImages.Add(4 + cw)
-                                    Case 5, 6
+                                    Case 5, 6, 7
                                         node.LeftImages.Add(3 + cw)
                                     Case Else
                                         node.LeftImages.Add(1 + cw)

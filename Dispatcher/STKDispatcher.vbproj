@@ -107,8 +107,13 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic.Compatibility">
       <Name>Microsoft.VisualBasic.Compatibility</Name>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.6.7\lib\net40-client\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Oracle.ManagedDataAccess, Version=4.121.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
@@ -122,6 +127,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -129,7 +135,10 @@
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms">
       <Name>System.Windows.Forms</Name>
@@ -415,6 +424,12 @@
     <None Include="My Project\app.manifest">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="_UpgradeReport.htm">
       <SubType>Preview</SubType>
@@ -466,6 +481,14 @@
       <Project>{A2F35277-80B7-4BB6-840F-F082DA5CE0B7}</Project>
       <Name>ASSVService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\atmServerLib\atmServer.csproj">
+      <Project>{c3eed2cb-ff30-4e41-95eb-ce00a8f1d50c}</Project>
+      <Name>atmServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\atmService\atmService.csproj">
+      <Project>{7379ca51-f29b-4efb-a225-b4db1aea1801}</Project>
+      <Name>atmService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DebugSTKServiceModem\DebugSTKServiceModem.csproj">
       <Project>{D211F14A-2491-47B6-AAEA-EC991B67C1EC}</Project>
       <Name>DebugSTKServiceModem</Name>
@@ -498,6 +521,10 @@
       <Project>{C815653B-CE5F-4A86-AC55-123AE1FC0B81}</Project>
       <Name>Drv943</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Drv944\Drv944.vbproj">
+      <Project>{6db801d7-19c3-4546-b268-1bc08f79ac85}</Project>
+      <Name>Drv944</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DrvDAN300\DrvDAN300.vbproj">
       <Project>{6e1e0e80-2d2f-4ffd-9701-a02eca496b55}</Project>
       <Name>DrvDAN300</Name>
@@ -518,6 +545,10 @@
       <Project>{0CA60AB7-4F6F-43D3-B9F4-C39E7DEF79E9}</Project>
       <Name>DrvTEM104</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DrvTSRV024\DrvTSRV024.vbproj">
+      <Project>{88722618-ada9-4bbc-8678-63e02408c295}</Project>
+      <Name>DrvTSRV024</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DrvTSRV02\DrvTSRV02.vbproj">
       <Project>{21DFA229-5ABC-4931-BD83-4B3108446765}</Project>
       <Name>DrvTSRV02</Name>
@@ -525,6 +556,10 @@
     <ProjectReference Include="..\DrvTSRV\DrvTSRV.vbproj">
       <Project>{299245D2-5F4B-4E7A-A08D-05930B831287}</Project>
       <Name>DrvTSRV</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DrvVKT4M\DrvVKT4M.vbproj">
+      <Project>{ff408bd9-c11a-4209-9aa6-e7e2664e8d6c}</Project>
+      <Name>DrvVKT4M</Name>
     </ProjectReference>
     <ProjectReference Include="..\DrvVKT4\DrvVKT4.vbproj">
       <Project>{4F74DC3D-F0A9-45C8-9B71-7376EB72E3F5}</Project>
@@ -537,10 +572,6 @@
     <ProjectReference Include="..\DrvVKT7\DrvVKT7.vbproj">
       <Project>{4DB1C271-F23F-409A-B1F7-CC29331708AC}</Project>
       <Name>DrvVKT7</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GlobalMonitorVB\GlobalMonitorVB.vbproj">
-      <Project>{194718A3-9BCB-4958-990C-819891269465}</Project>
-      <Name>GlobalMonitorVB</Name>
     </ProjectReference>
     <ProjectReference Include="..\GPIOClient\GPIOClient.vbproj">
       <Project>{343E857F-77FC-4051-AE5B-82861744CC25}</Project>
@@ -569,6 +600,18 @@
     <ProjectReference Include="..\ReportXLGen\ReportXL.vbproj">
       <Project>{DB7758BC-2EDE-4DF1-A69F-997AEEC16F60}</Project>
       <Name>ReportXL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ROBUSTELServerLib\ROBUSTELServer.csproj">
+      <Project>{19d7ac2e-7984-4962-acfb-a8d373559907}</Project>
+      <Name>ROBUSTELServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ROBUSTELService\ROBUSTELService.csproj">
+      <Project>{3ffcf0b9-f271-48fa-ae0c-94d226570fd4}</Project>
+      <Name>ROBUSTELService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\STKServiceModem\STKServiceModem.csproj">
+      <Project>{6132bdc5-102c-43e1-8960-64dbd4b3657a}</Project>
+      <Name>STKServiceModem</Name>
     </ProjectReference>
     <ProjectReference Include="..\STKService\STKService.csproj">
       <Project>{78F9CEBD-C5FE-4A93-93F5-FDF9423E0634}</Project>

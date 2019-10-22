@@ -127,61 +127,43 @@ Public Class Driver
     End Function
 
     Public Function GetAndProcessData() As String
-        Dim buf(80) As Byte
+        Dim buf(100) As Byte
         Dim i As Int16
-        For i = 0 To 80
+        For i = 0 To 100
             buf(i) = 0
         Next
 
-        Dim ret As Long
-
-        If (IsBytesToRead = False) Then
-            Return ""
-        End If
-
-        Try
-            ret = MyRead(buf, 0, WillCountToRead, CalcInterval(WillCountToRead))
-            If (buf(2) > &HC1) Then
-                '
+        Dim ret As Long = 1
+        bufferindex = 0
+        Dim nomore As Integer = 0
+        While (bufferindex < WillCountToRead And nomore <= 20)
+            Try
+                ret = MyRead(buf, bufferindex, WillCountToRead - bufferindex, CalcInterval(WillCountToRead))
+                If (ret > 0) Then
+                    If (buf(2) > &HC1) Then
+                        EraseInputQueue()
+                        Return "Ошибка. Код ошибки:" + Hex(buf(4))
+                    End If
+                    nomore = 0
+                    bufferindex += ret
+                    If (bufferindex >= WillCountToRead) Then
+                        Return ProcessReceivedData(buf, bufferindex)
+                    End If
+                Else
+                    If nomore = 20 And bufferindex >= 7 Then
+                        Return ProcessReceivedData(buf, bufferindex)
+                    End If
+                    nomore += 1
+                End If
+            Catch ex As Exception
                 EraseInputQueue()
-                Return "Ошибка. Код ошибки:" + Hex(buf(4))
-            End If
-            If (ret > 0) Then
-                If (ret = WillCountToRead) Then
-                    If (ispackageError = True) Then
-
-                        For i = bufferindex + 1 To bufferindex + ret
-                            buffer(i) = buf(i - bufferindex - 1)
-                        Next
-                        If (pagesToRead < 2) Then IsBytesToRead = False
-                        bufferindex = 0
-                        For i = 0 To 65
-                            buffer(i) = 0
-                        Next
-                        If (pagesToRead < 2) Then EraseInputQueue()
-                        ispackageError = False
-                        Return writeMessage(buffer, bufferindex)
-                    End If
-                    If (pagesToRead > 1) Then
-                        pagesToRead = pagesToRead - 1
-                        Return writeMessage(buf, ret)
-                    End If
-                    IsBytesToRead = False
-                    EraseInputQueue()
-                    Return writeMessage(buf, ret)
-                End If
-                If (ret < WillCountToRead) Then
-                    For i = bufferindex To bufferindex + ret - 1
-                        buffer(i) = buf(i)
-                    Next
-                    ispackageError = True
-                    WillCountToRead = WillCountToRead - ret
-                    bufferindex = bufferindex + ret - 1
-                End If
-            End If
-        Catch ex As Exception
-            Return "Ошибка." + ex.Message
-        End Try
+                Return "Ошибка."
+            End Try
+            System.Threading.Thread.Sleep(CalcInterval(10))
+        End While
+        If (bufferindex >= 7) Then
+            Return ProcessReceivedData(buf, bufferindex)
+        End If
         Return ""
     End Function
 
@@ -395,7 +377,7 @@ finalRet:
         End Set
     End Property
 
-    Public Function writeMessage(ByVal buf() As Byte, ByVal ret As Short) As String
+    Public Function ProcessReceivedData(ByVal buf() As Byte, ByVal ret As Short) As String
         Dim retstring As String = ""
 
         Dim KC As Long = 0

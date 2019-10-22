@@ -189,6 +189,18 @@ Public MustInherit Class TVDriver
         End Set
     End Property
 
+
+    Dim m_DB As TVMain
+
+    Public Overridable Property DB() As TVMain
+        Get
+            Return m_DB
+        End Get
+        Set(ByVal value As TVMain)
+            m_DB = value
+        End Set
+    End Property
+
 #End Region
 #Region "Transport support"
 
@@ -210,7 +222,7 @@ Public MustInherit Class TVDriver
 
 
 
-        If Transport = 5 Or Transport = 6 Then
+        If Transport = 5 Or Transport = 6 Or Transport = 7 Then
             MyTransport = New GRPSTransport(aSocket)
             ad = New GRPSTransportSetupData
             ad.BaudRate = BaudRate
@@ -338,6 +350,9 @@ Public MustInherit Class TVDriver
         If MyTransport Is Nothing Then
             MyTransport = New NportTransport
         End If
+        MyTransport.ID_BD = DeviceID
+
+
 
         Return MyTransport.Connect()
     End Function
@@ -345,6 +360,7 @@ Public MustInherit Class TVDriver
 
     Public Overridable Sub CloseTransportConnect()
         If Not MyTransport Is Nothing Then
+
             MyTransport.DisConnect()
             MyTransport = Nothing
         End If
@@ -540,13 +556,13 @@ Public MustInherit Class TVDriver
                 System.Threading.Thread.Sleep(500)
             End If
 
-            If Me.BaudRate - (Me.BaudRate / 10) >= 1200 Then
-                Me.BaudRate -= (Me.BaudRate / 10)
-            Else
-                Me.BaudRate = 1200
-            End If
+            'If Me.BaudRate - (Me.BaudRate / 10) >= 1200 Then
+            '    Me.BaudRate -= (Me.BaudRate / 10)
+            'Else
+            '    Me.BaudRate = 1200
+            'End If
 
-            Debug.Print("Decrement baud rate: " + BaudRate.ToString)
+            'Debug.Print("Decrement baud rate: " + BaudRate.ToString)
         End If
 
     End Sub

@@ -216,7 +216,7 @@ namespace STKServiceModem
                                         }
                                         else
                                         {
-                                            if (Threads[id_bd].Process.HasExited == true || Threads[id_bd].Process.StartTime.AddMinutes(30) <= DateTime.Now)
+                                            if (Threads[id_bd].Process.HasExited == true || Threads[id_bd].Process.StartTime.AddMinutes(40) <= DateTime.Now)
                                             {
                                                 // инициализируем процесс еще раз
                                                 // сначала убиваем процесс

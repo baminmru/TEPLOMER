@@ -156,7 +156,7 @@ Public Class ClientForm
         End If
 
         If qdt.Rows.Count = 1 Then
-            If qdt.Rows(0)("transport") = 5 Or qdt.Rows(0)("transport") = 6 Then
+            If qdt.Rows(0)("transport") = 5 Or qdt.Rows(0)("transport") = 6 Or qdt.Rows(0)("transport") = 7 Then
                 AppendInfo("“епловычислитель подключен по GPRS, пр€мой опрос невозможен")
                 Application.DoEvents()
                 MsgBox(lblNodeName.Text + ". “епловычислитель подключен по GPRS, пр€мой опрос невозможен, запрос по списку будет поставлен в очередь на опрос.")

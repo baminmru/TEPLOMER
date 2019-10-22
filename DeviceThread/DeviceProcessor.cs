@@ -462,14 +462,17 @@ namespace STKService
                                     bool ReadHOK;
                                     ReadHOK = false;
 
-                                    // все по расписанию, читаем архивы назад
+                                        // все по расписанию, читаем архивы назад, для  магики  читаем  от меньшего к большему !!!!
+                                        tempdate = tempdate.AddHours(-numhour);
+
+                                    
                                     for (int j = 0; j < numhour; j++)
                                     {
                                         if (TvMain.TVD.IsConnected())
                                         {
                                             try
                                             {
-                                                tempdate = tempdate.AddHours(-1);
+                                                tempdate = tempdate.AddHours(1);
 
 
                                                 String str;
@@ -560,8 +563,6 @@ namespace STKService
                         if (TvMain.TVD.IsConnected() && c24 && ddd <= SrvDate)
                         {
 
-                           
-                            
                             DateTime tempdate;
                             Int16 num24;
                             num24 = Convert.ToInt16(dr["num24"].ToString());
@@ -652,14 +653,15 @@ namespace STKService
                                 ReadDOK = false;
                                 try
                                 {
-                                    if( TvMain.LockDevice(id_bdc,400 * num24,true) ){ 
-                                    for (int j = 0; j < num24 ; j++)
+                                    if( TvMain.LockDevice(id_bdc,400 * num24,true) ){
+                                        tempdate = tempdate.AddDays(-num24);  // для магики
+                                        for (int j = 0; j < num24 ; j++)
                                     {
 
                                         if (TvMain.TVD.IsConnected())
                                         {
                                             TvMain.HoldLine();
-                                            tempdate = tempdate.AddDays(-1);
+                                            tempdate = tempdate.AddDays(1);
 
                                             String str;
                                             if (TvMain.CheckForArch(archType_day, tempdate.Year, tempdate.Month, tempdate.Day, 0, id_bdc) == false)
@@ -897,7 +899,7 @@ namespace STKService
                             int GRCount=0;
                             int TryCount = 0;
                             DataTable missingpass;
-                            missing = TvMain.QuerySelect("select ARCHDATE,DEVNAME from missingarch where id_bd=" + id_bdc.ToString() + " and ARCHDATE>SYSDATE-32 and ARCHDATE<SYSDATE-4/24 and ARCHDATE<" + TvMain.OracleDate(ddd) + "  and DEVNAME like '%Час%' order by archdate desc  "); // and devname not like '%Нули%'");
+                            missing = TvMain.QuerySelect("select ARCHDATE,DEVNAME from missingarch where id_bd=" + id_bdc.ToString() + " and ARCHDATE>SYSDATE-32 and ARCHDATE<SYSDATE-4/24 and ARCHDATE<" + TvMain.OracleDate(ddd) + "  and DEVNAME like '%Час%' order by archdate asc  "); // and devname not like '%Нули%'");
                             
                             try
                             {
@@ -1017,7 +1019,7 @@ namespace STKService
                             int GRCount = 0;
                             int TryCount = 0;
                             DataTable missingpass;
-                            missing = TvMain.QuerySelect("select ARCHDATE,DEVNAME from missingarch where id_bd=" + id_bdc.ToString() + " and ARCHDATE>SYSDATE-32 and ARCHDATE<SYSDATE-1 and  ARCHDATE<" + TvMain.OracleDate(ddd) + " and DEVNAME like '%Суточ%'  order by archdate desc "); //and devname not like '%Нули%'");
+                            missing = TvMain.QuerySelect("select ARCHDATE,DEVNAME from missingarch where id_bd=" + id_bdc.ToString() + " and ARCHDATE>SYSDATE-32 and ARCHDATE<SYSDATE-1 and  ARCHDATE<" + TvMain.OracleDate(ddd) + " and DEVNAME like '%Суточ%'  order by archdate asc "); //and devname not like '%Нули%'");
 
                             try
                             {
@@ -1129,7 +1131,7 @@ namespace STKService
 
                             DateTime tempdate;
                             DataTable missing;
-                            missing = TvMain.QuerySelect("select QLISTID, QDATE,PROCESSED from QLIST where id_bd=" + id_bdc.ToString() + " and id_PTYPE=3 ");
+                            missing = TvMain.QuerySelect("select QLISTID, QDATE,PROCESSED from QLIST where id_bd=" + id_bdc.ToString() + " and id_PTYPE=3 order by QDATE asc ");
 
                             try
                             {
@@ -1226,7 +1228,7 @@ namespace STKService
 
                             DateTime tempdate;
                             DataTable missing;
-                            missing = TvMain.QuerySelect("select QLISTID, QDATE,PROCESSED from QLIST where id_bd=" + id_bdc.ToString() + " and id_PTYPE=4 ");
+                            missing = TvMain.QuerySelect("select QLISTID, QDATE,PROCESSED from QLIST where id_bd=" + id_bdc.ToString() + " and id_PTYPE=4 order by QDATE asc ");
 
                             try
                             {

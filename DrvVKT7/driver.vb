@@ -277,6 +277,7 @@ Public Class driver
                 Dim rdi As Integer
                 rdi = 5
                 While Not rdok And rdi > 0
+                    b = Nothing
                     Try
                         b = ReadData()
                         rdok = True
@@ -286,19 +287,19 @@ Public Class driver
                 End While
 
 
-                If Not b Is Nothing Then
+                If Not b Is Nothing And rdok Then
                     If b.Length >= ActiveCount * 3 Then
-                    For i = 0 To ActiveCount - 1
-                        Try
-                            PropVal(ActiveElements(i)) = b(3 + i * 3)
-                        Catch ex As Exception
-                            Return False
-                        End Try
-                    Next
+                        For i = 0 To ActiveCount - 1
+                            Try
+                                PropVal(ActiveElements(i)) = b(3 + i * 3)
+                            Catch ex As Exception
+                                Return False
+                            End Try
+                        Next
                         Return True
+                    End If
                 End If
             End If
-        End If
         End If
         Return False
     End Function
@@ -2314,7 +2315,7 @@ filldata:
                                             AErr += "P2;"
                                         End If
 
-                                    Case VKT7ElemType.P2_1Type
+                                    Case VKT7ElemType.P1_2Type
                                         Arch.P3 = GetValue(sout, IsError)
                                         If IsHC Then
                                             Arch.MsgHC += "P3:" + CurHC + " "
@@ -2496,6 +2497,7 @@ filldata:
                 If VerifySumm(b, 0, sz) Then
                     EraseInputQueue()
                     SequenceErrorCount = 0
+                    ReDim Preserve b(sz)
                     Return b
                 End If
 

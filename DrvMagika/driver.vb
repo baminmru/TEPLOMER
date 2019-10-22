@@ -6,6 +6,10 @@ Imports STKTVMain
 Imports System.IO
 Imports System.Threading
 Imports System.Collections.Generic
+Imports System.Xml.Serialization
+Imports NLog
+
+
 #Region "structures"
 
 
@@ -214,19 +218,23 @@ End Structure
 Public Class driver
     Inherits STKTVMain.TVDriver
 
-    Private Const MAXHOUR As Integer = 60 * 24
-    Private Const MAXDAY As Integer = 60
+    Private Shared Logger As Logger = LogManager.GetCurrentClassLogger()
+
+    Private Const MAXHOUR As Integer = 90 * 24
+    Private Const MAXDAY As Integer = 240
 
     Private mIsConnected As Boolean
 
-    Private DeviceSubtype As String
+    Private DeviceSubtype As String = "E"
 
     Private isTCP As Boolean
     Private SleepTime As Long
-    Private HCash As Dictionary(Of String, CashItem)
-    Private DCash As Dictionary(Of String, CashItem)
-    Private lastD As DateTime
-    Private lastH As DateTime
+    Private HCash As STKTVMain.XmlSerializableDictionary(Of String, CashItem)
+    Private DCash As STKTVMain.XmlSerializableDictionary(Of String, CashItem)
+    Private EarliestCacheDate As DateTime
+    Private EarliestCacheHour As DateTime
+    Private LatestCahceDate As DateTime
+    Private LatestCacheHour As DateTime
 
     Dim tArch As TArchive
     Dim IsTArchToRead As Boolean = False
@@ -281,18 +289,26 @@ Public Class driver
         Dim ch As UInt16
         Dim tryCnt As Integer
         Dim ok As Boolean
+
+        EraseInputQueue()
+        Frame(0) = &H12
+        Frame(1) = &H99
+
+        MyTransport.CleanPort()
+        MyTransport.Write(Frame, 0, 2)
+        Thread.Sleep(100)
         tryCnt = 7
         ok = False
         While Not ok And tryCnt >= 0
             tryCnt = tryCnt - 1
-            EraseInputQueue()
+
             Frame(0) = &H12
             Frame(1) = &H80
             Dim i As Integer
             For i = 0 To 7
                 Frame(i + 2) = Asc(Mid(NPPassword, i + 1, 1))
             Next
-            MyTransport.CleanPort()
+
             MyTransport.Write(Frame, 0, 10)
             WaitForData()
             Dim b(4096) As Byte
@@ -311,7 +327,7 @@ Public Class driver
                         Return True
                     End If
                     RaiseIdle()
-                    Thread.Sleep(CalcInterval(2))
+                    Thread.Sleep(CalcInterval(30))
                     cnt = MyTransport.BytesToRead
                 End While
             Else
@@ -331,16 +347,79 @@ Public Class driver
         Try
 
             If DevInit() Then
-                mIsConnected = True
-
-
-
-                GetCFG()
+                mIsConnected = GetCFG()
                 RaiseIdle()
-                Thread.Sleep(CalcInterval(10))
+                Thread.Sleep(100)
 
 
 
+                Try
+                    Dim serializer As New XmlSerializer(DCash.GetType(), New XmlRootAttribute("DCash"))
+                    Dim deserialized As STKTVMain.XmlSerializableDictionary(Of String, CashItem) = Nothing
+                    Using file = System.IO.File.OpenRead("C:\magika\cache\" + DeviceID.ToString() + "_D.xml")
+                        deserialized = DirectCast(serializer.Deserialize(file), Dictionary(Of String, CashItem))
+                    End Using
+                    DCash = deserialized
+
+                    Dim d As DateTime
+                    Dim first As Boolean = True
+
+
+                    LatestCahceDate = DateTime.Today.AddDays(-MAXDAY)
+
+
+                    For Each ci As CashItem In DCash.Values
+                        d = DateSerial(ci.Y, ci.M, ci.D)
+                        If first Then
+                            LatestCahceDate = d
+                            first = False
+                        End If
+                        If EarliestCacheDate > d Then EarliestCacheDate = d
+                        If LatestCahceDate < d Then LatestCahceDate = d
+                    Next
+
+
+
+
+                Catch ex As Exception
+
+                End Try
+
+                Try
+                    Dim serializer As New XmlSerializer(HCash.GetType(), New XmlRootAttribute("HCash"))
+                    Dim deserialized As STKTVMain.XmlSerializableDictionary(Of String, CashItem) = Nothing
+                    Using file = System.IO.File.OpenRead("C:\magika\cache\" + DeviceID.ToString() + "_H.xml")
+                        deserialized = DirectCast(serializer.Deserialize(file), Dictionary(Of String, CashItem))
+                    End Using
+                    HCash = deserialized
+
+                    Dim d As DateTime
+                    Dim first As Boolean = True
+
+                    LatestCacheHour = DateTime.Today.AddHours(-MAXHOUR)
+                    For Each ci As CashItem In DCash.Values
+                        d = DateSerial(ci.Y, ci.M, ci.D)
+                        d = d.AddTicks(TimeSerial(ci.H - 1, 0, 0).Ticks)
+                        If first Then
+                            LatestCacheHour = d
+                            first = False
+                        End If
+                        If EarliestCacheHour > d Then EarliestCacheHour = d
+                        If LatestCacheHour < d Then LatestCacheHour = d
+                    Next
+
+
+
+                Catch ex As Exception
+
+                End Try
+
+                ' считаем валидной только часть кеша до первой дырки в данных !!!
+                VerifyCaheWholes()
+
+                ' сбросим счетчик загруженных блоков
+                PreloadHourCounter = 0
+                PreloadDaysCounter = 0
             End If
         Catch exc As Exception
             Return
@@ -348,44 +427,53 @@ Public Class driver
     End Sub
 
 
-    Private Sub GetCFG()
+    Private Function GetCFG() As Boolean
         Dim cmd(2) As Byte
-        cmd(0) = &H12
-        cmd(1) = &H11
-        EraseInputQueue()
-        MyTransport.Write(cmd, 0, 2)
-        WaitForData()
-
         Dim b(10) As Byte
         Dim cnt As Integer
-        Dim sz As Integer
-        cnt = MyTransport.BytesToRead
-        If cnt > 0 Then
-            sz = 0
-            While cnt > 0
-                MyTransport.Read(b, sz, cnt)
-                sz += cnt
-                RaiseIdle()
-                Thread.Sleep(CalcInterval(10))
-                cnt = MyTransport.BytesToRead
-            End While
-        End If
+        Dim sz As Integer = 0
+        Dim tryCnt As Integer = 5
+        While sz <> 4 And tryCnt > 0
+            tryCnt -= 1
+
+            cmd(0) = &H12
+            cmd(1) = &H11
+            EraseInputQueue()
+            Thread.Sleep(2000)
+            MyTransport.Write(cmd, 0, 2)
+            WaitForData()
+            Thread.Sleep(2000)
+            cnt = MyTransport.BytesToRead
+            If cnt > 0 Then
+                sz = 0
+                While cnt > 0
+                    MyTransport.Read(b, sz, cnt)
+                    sz += cnt
+                    RaiseIdle()
+                    Thread.Sleep(200)
+                    cnt = MyTransport.BytesToRead
+                End While
+            End If
+        End While
         If sz = 4 Then
             DeviceSubtype = "A"
             If b(0) And 64 Then
                 DeviceSubtype = "E"
-                Exit Sub
+                Return True
             End If
-            If b(0) And 32 Then
+            If b(0) And 32 Or b(3) And 16 Then
                 DeviceSubtype = "A"
-            End If
-            If b(3) And 16 Then
-                DeviceSubtype = "AM"
-            End If
+                If b(3) And 16 Then
+                    DeviceSubtype = "AM"
 
+                End If
+                Return True
+            End If
+            Return True
         End If
+        Return False
 
-    End Sub
+    End Function
 
     Private Function BCD(ByVal B As Byte) As Byte
         Dim i As UInteger
@@ -396,12 +484,11 @@ Public Class driver
         'Return B
     End Function
 
-  
 
-   
+
+
 
     Private Function ReadArchRecord(ByVal ArchType As Short, ByVal ArchDate As Date) As Byte()
-
 
         Dim ArchYear As Short
         Dim ArchMonth As Short
@@ -425,7 +512,7 @@ Public Class driver
                     cc = HCash(key)
                     Return cc.data
                 End If
-                Debug.Print("Key not found " + key + " lastH=" + lastH.ToString)
+                Debug.Print("Key not found " + key + " EarliestCacheHour=" + EarliestCacheHour.ToString)
 
             Else
                 key = ArchYear.ToString + "_" + ArchMonth.ToString() + "_" + ArchDay.ToString()
@@ -433,7 +520,7 @@ Public Class driver
                     cc = DCash(key)
                     Return cc.data
                 End If
-                Debug.Print("Key not found " + key + " lastD=" + lastD.ToString)
+                Debug.Print("Key not found " + key + " EarliestCacheDate=" + EarliestCacheDate.ToString)
             End If
 
 
@@ -446,17 +533,24 @@ Public Class driver
         Return Nothing
     End Function
 
+    Private PreloadHourCounter As Integer = 0
     Private Function AddHourBlock(ByVal b() As Byte, ByVal offset As Integer) As Boolean
         Dim I As Integer
         Dim key As String
         Dim cc As CashItem
         Dim d As DateTime
 
+        PreloadHourCounter += 1
+
         key = (2000 + BCD(b(offset + 3 + 1))).ToString + "_" + BCD(b(offset + 1 + 1)).ToString() + "_" + BCD(b(offset + 0 + 1)).ToString() + "_" + (BCD(b(offset + 2 + 1))).ToString()
-        If HCash.ContainsKey(key) Then Return False
+        If HCash.ContainsKey(key) Then
+            DB.SaveLog(DeviceID, 0, "??", 1, "Архив часовых уже закеширован: " + key)
+            Return False
+        End If
 
         Debug.Print("Add " + key)
         DriverTransport.SendEvent(UnitransportAction.ReceiveData, key)
+        DB.SaveLog(DeviceID, 0, "??", 1, "Подгрузка часовых: " + key)
         cc = New CashItem
         With cc
             .Y = 2000 + BCD(b(offset + 3 + 1))
@@ -470,10 +564,29 @@ Public Class driver
             d = DateSerial(.Y, .M, .D)
             d = d.AddTicks(TimeSerial(.H - 1, 0, 0).Ticks)
         End With
-        If lastH > d Then lastH = d
+        If EarliestCacheHour > d Then EarliestCacheHour = d
         HCash.Add(key, cc)
+
+        Try
+            Dim serializer As New XmlSerializer(HCash.GetType(), New XmlRootAttribute("HCash"))
+            If Not Directory.Exists("C:\magika") Then
+                Directory.CreateDirectory("C:\magika")
+            End If
+            If Not Directory.Exists("C:\magika\cache") Then
+                Directory.CreateDirectory("C:\magika\cache")
+            End If
+
+            Using file As System.IO.FileStream = System.IO.File.Open("C:\magika\cache\" + DeviceID.ToString() + "_H.xml", IO.FileMode.OpenOrCreate, IO.FileAccess.Write)
+                serializer.Serialize(file, HCash)
+            End Using
+        Catch ex As Exception
+            Logger.Error(ex, "Serialize H")
+        End Try
+
         Return True
     End Function
+
+    Private PreloadDaysCounter As Integer = 0
 
     Private Function AddDayBlock(ByVal b() As Byte, ByVal offset As Integer) As Boolean
         Dim I As Integer
@@ -481,15 +594,19 @@ Public Class driver
         Dim cc As CashItem
         Dim d As DateTime
 
+        PreloadDaysCounter += 1
+
         key = (2000 + BCD(b(offset + 3 + 1))).ToString + "_" + BCD(b(offset + 1 + 1)).ToString() + "_" + BCD(b(offset + 0 + 1)).ToString()
-        If DCash.ContainsKey(key) Then Return False
+        If DCash.ContainsKey(key) Then
+            DB.SaveLog(DeviceID, 0, "??", 1, "Архив суточных уже закеширован: " + key)
+            Return False
+        End If
 
         DriverTransport.SendEvent(UnitransportAction.ReceiveData, key)
         Debug.Print("Add " + key)
+        DB.SaveLog(DeviceID, 0, "??", 1, "Подгрузка суточных: " + key)
         cc = New CashItem
         With cc
-
-
             .Y = 2000 + BCD(b(offset + 3 + 1))
             .M = BCD(b(offset + 1 + 1))
             .D = BCD(b(offset + 0 + 1))
@@ -501,7 +618,27 @@ Public Class driver
             d = DateSerial(.Y, .M, .D)
         End With
         DCash.Add(key, cc)
-        If lastD > d Then lastD = d
+
+        Try
+            Dim serializer As New XmlSerializer(DCash.GetType(), New XmlRootAttribute("DCash"))
+            If Not Directory.Exists("C:\magika") Then
+                Directory.CreateDirectory("C:\magika")
+            End If
+            If Not Directory.Exists("C:\magika\cache") Then
+                Directory.CreateDirectory("C:\magika\cache")
+            End If
+            Using file As System.IO.FileStream = System.IO.File.Open("C:\magika\cache\" + DeviceID.ToString() + "_D.xml", IO.FileMode.OpenOrCreate, IO.FileAccess.Write)
+                serializer.Serialize(file, DCash)
+            End Using
+        Catch ex As Exception
+            Logger.Error(ex, "Serialize D")
+
+            Debug.Print(ex.Message)
+
+        End Try
+
+
+        If EarliestCacheDate > d Then EarliestCacheDate = d
         Return True
     End Function
 
@@ -511,17 +648,16 @@ Public Class driver
         Dim ok As Boolean
         Dim Frame(10) As Byte
         If dt >= GetDeviceDate().AddHours(-1) Then Exit Sub
-        If dt > lastH Then Exit Sub
+        If dt > EarliestCacheHour And dt <= LatestCacheHour Then Exit Sub
+
         If Not ReadArchRecord(archType_hour, dt) Is Nothing Then Exit Sub
 
         ok = False
-        EraseInputQueue()
         Frame(0) = &H12
         Frame(1) = 4
-        MyTransport.CleanPort()
         MyTransport.Write(Frame, 0, 2)
-        Thread.Sleep(CalcInterval(70))
         WaitForData()
+        Thread.Sleep(2000)
 
         Dim sz As Integer
         'Dim rcnt As Integer
@@ -536,18 +672,18 @@ Public Class driver
             ok = True
 
             RaiseIdle()
-            Thread.Sleep(CalcInterval(50))
+            Thread.Sleep(200)
             cnt = MyTransport.BytesToRead
         End While
-        If b(0) = 1 Then
+        If sz > 0 And b(0) = 1 Then
             If b(1) > 0 Then
                 AddHourBlock(b, 1)
                 ok = True
                 While ok
                     Frame(0) = &H1
                     MyTransport.Write(Frame, 0, 1)
-                    Thread.Sleep(CalcInterval(70))
                     WaitForData()
+                    Thread.Sleep(2000)
                     cnt = MyTransport.BytesToRead
                     sz = 0
                     While cnt > 0
@@ -555,15 +691,16 @@ Public Class driver
                         sz += cnt
                         ok = True
                         RaiseIdle()
-                        Thread.Sleep(CalcInterval(50))
+                        Thread.Sleep(200)
                         cnt = MyTransport.BytesToRead
                     End While
-                    If b(0) > 0 Then
+                    If sz > 0 And b(0) > 0 Then
                         AddHourBlock(b, 0)
 
 
-                        If HCash.Count = MAXHOUR Then
+                        If PreloadHourCounter = MAXHOUR Then
                             ok = False
+                            DB.SaveLog(DeviceID, 0, "??", 1, "Достигнута максимальная глубина подгрузки часовых")
                         Else
                             ok = True
                         End If
@@ -572,12 +709,17 @@ Public Class driver
 
                     Else
                         ok = False
+                        DB.SaveLog(DeviceID, 0, "??", 1, "Ошибка подгрузки часовых: " + dt.ToString())
+                    End If
+                    If LatestCacheHour >= dt And dt > EarliestCacheHour Then
+                        DB.SaveLog(DeviceID, 0, "??", 1, "Дата в пределах кеширования, но запись не найдена: " + dt.ToString())
+                        Exit While
                     End If
                 End While
 
                 Frame(0) = &H8
                 MyTransport.Write(Frame, 0, 1, True)
-                Thread.Sleep(CalcInterval(70))
+                Thread.Sleep(100)
 
             Else
                 Exit Sub
@@ -591,23 +733,54 @@ Public Class driver
     End Sub
 
 
+    Private Sub VerifyCaheWholes()
+
+
+        Dim d As Date
+        If DCash.Count > 0 Then
+            d = EarliestCacheDate
+            While d <= LatestCahceDate
+                If ReadArchRecord(archType_day, d) Is Nothing Then
+                    LatestCahceDate = d.AddDays(1)
+                    Exit While
+                End If
+                d = d.AddDays(-1)
+            End While
+        End If
+
+        If HCash.Count > 0 Then
+            d = EarliestCacheHour
+            While d <= LatestCacheHour
+                If ReadArchRecord(archType_hour, d) Is Nothing Then
+                    LatestCacheHour = d.AddHours(1)
+                    Exit While
+                End If
+                d = d.AddHours(-1)
+            End While
+        End If
+
+
+    End Sub
+
     Private Sub PreloadDays(ByVal dt As Date)
 
         Dim ok As Boolean
         Dim Frame(10) As Byte
         If dt >= GetDeviceDate().AddDays(-1) Then Exit Sub
-        If dt > lastD Then Exit Sub
+
+        If dt > EarliestCacheDate And dt <= LatestCahceDate Then
+            Exit Sub
+        End If
+
         If Not ReadArchRecord(archType_day, dt) Is Nothing Then Exit Sub
-        
+
         ok = False
-        EraseInputQueue()
+
         Frame(0) = &H12
         Frame(1) = 5
-        MyTransport.CleanPort()
         MyTransport.Write(Frame, 0, 2)
-        Thread.Sleep(CalcInterval(70))
         WaitForData()
-
+        Thread.Sleep(2000)
         Dim sz As Integer
         'Dim rcnt As Integer
         Dim b(4096) As Byte
@@ -621,7 +794,7 @@ Public Class driver
             ok = True
 
             RaiseIdle()
-            Thread.Sleep(CalcInterval(50))
+            Thread.Sleep(200)
             cnt = MyTransport.BytesToRead
         End While
         If sz > 40 Then
@@ -632,8 +805,8 @@ Public Class driver
                     While ok
                         Frame(0) = &H1
                         MyTransport.Write(Frame, 0, 1)
-                        Thread.Sleep(CalcInterval(70))
                         WaitForData()
+                        Thread.Sleep(2000)
                         cnt = MyTransport.BytesToRead
                         sz = 0
                         While cnt > 0
@@ -641,16 +814,17 @@ Public Class driver
                             sz += cnt
                             ok = True
                             RaiseIdle()
-                            Thread.Sleep(CalcInterval(10))
+                            Thread.Sleep(200)
                             cnt = MyTransport.BytesToRead
                         End While
-                        If b(0) > 0 Then
+                        If sz > 0 And b(0) > 0 Then
                             AddDayBlock(b, 0)
 
 
 
-                            If DCash.Count >= MAXDAY Then
+                            If PreloadDaysCounter >= MAXDAY Then
                                 ok = False
+                                DB.SaveLog(DeviceID, 0, "??", 1, "Достигнута максимальная глубина подгрузки суточных")
                             Else
                                 ok = True
                             End If
@@ -660,6 +834,11 @@ Public Class driver
 
                         Else
                             ok = False
+                            DB.SaveLog(DeviceID, 0, "??", 1, "Ошибка подгрузки суточных: " + dt.ToString())
+                        End If
+                        If dt > EarliestCacheDate And dt <= LatestCahceDate Then
+                            DB.SaveLog(DeviceID, 0, "??", 1, "Дата в пределах кеширования, но запись не найдена: " + dt.ToString())
+                            Exit While
                         End If
                     End While
                 End If
@@ -667,7 +846,7 @@ Public Class driver
 
                 Frame(0) = &H8
                 MyTransport.Write(Frame, 0, 1, True)
-                Thread.Sleep(CalcInterval(70))
+                Thread.Sleep(100)
 
             Else
                 Exit Sub
@@ -681,7 +860,7 @@ Public Class driver
     End Sub
 
 
-    Public Overrides Function ReadArch(ByVal ArchType As Short, ByVal ArchYear As Short, _
+    Public Overrides Function ReadArch(ByVal ArchType As Short, ByVal ArchYear As Short,
     ByVal ArchMonth As Short, ByVal ArchDay As Short, ByVal ArchHour As Short) As String
         Dim retsum As String
         Dim ok As Boolean = False
@@ -843,7 +1022,7 @@ Public Class driver
     End Function
 
     Private Function OracleDate(ByVal d As Date) As String
-        Return "to_date('" + d.Year.ToString() + "-" + d.Month.ToString() + "-" + d.Day.ToString() + _
+        Return "to_date('" + d.Year.ToString() + "-" + d.Month.ToString() + "-" + d.Day.ToString() +
             " " + d.Hour.ToString() + ":" + d.Minute.ToString() + ":" + d.Second.ToString() + "','YYYY-MM-DD HH24:MI:SS')"
     End Function
 
@@ -914,6 +1093,13 @@ Public Class driver
         arc.M4 = 0
         arc.M5 = 0
         arc.M6 = 0
+        arc.worktime = 0
+        arc.errtime1 = 0
+        arc.errtime2 = 0
+        arc.oktime1 = 0
+        arc.oktime2 = 0
+        arc.Tw1 = 0
+        arc.Tw2 = 0
 
         arc.archType = 0
         isArchToDBWrite = False
@@ -1362,8 +1548,8 @@ Public Class driver
 
         MyTransport.CleanPort()
         MyTransport.Write(Frame, 0, 2)
-        Thread.Sleep(CalcInterval(70))
         WaitForData()
+        Thread.Sleep(1000)
 
         Dim b(4096) As Byte
         Dim cnt As Integer
@@ -1378,7 +1564,7 @@ Public Class driver
 
                 sz += cnt
                 RaiseIdle()
-                Thread.Sleep(CalcInterval(50))
+                Thread.Sleep(200)
                 cnt = MyTransport.BytesToRead
                 ok = True
             End While
@@ -1387,7 +1573,7 @@ Public Class driver
         Frame(0) = &H1
 
 
-        MyTransport.CleanPort()
+
         MyTransport.Write(Frame, 0, 1, True)
 
 
@@ -1433,8 +1619,8 @@ Public Class driver
 
         MyTransport.CleanPort()
         MyTransport.Write(Frame, 0, 2)
-        Thread.Sleep(CalcInterval(70))
         WaitForData()
+        Thread.Sleep(1000)
 
         Dim b(4096) As Byte
         Dim cnt As Integer
@@ -1448,7 +1634,7 @@ Public Class driver
             ok = True
 
             RaiseIdle()
-            Thread.Sleep(CalcInterval(50))
+            Thread.Sleep(200)
             cnt = MyTransport.BytesToRead
         End While
 
@@ -1543,15 +1729,15 @@ Public Class driver
         WriteMArchToDB = WriteMArchToDB + Format(mArch.m2, "##############0.000000").Replace(",", ".") + ","
         WriteMArchToDB = WriteMArchToDB + Format(mArch.m3, "##############0.000000").Replace(",", ".") + ","
         WriteMArchToDB = WriteMArchToDB + Format(mArch.m4, "##############0.000000").Replace(",", ".") + ","
-        WriteMArchToDB = WriteMArchToDB + Format(mArch.M5, "##############0.000000").Replace(",", ".") + ","
-        WriteMArchToDB = WriteMArchToDB + Format(mArch.M6, "##############0.000000").Replace(",", ".") + ","
+        WriteMArchToDB = WriteMArchToDB + Format(mArch.m5, "##############0.000000").Replace(",", ".") + ","
+        WriteMArchToDB = WriteMArchToDB + Format(mArch.m6, "##############0.000000").Replace(",", ".") + ","
 
         WriteMArchToDB = WriteMArchToDB + Format(mArch.v1, "##############0.000000").Replace(",", ".") + ","
         WriteMArchToDB = WriteMArchToDB + Format(mArch.v2, "##############0.000000").Replace(",", ".") + ","
         WriteMArchToDB = WriteMArchToDB + Format(mArch.v3, "##############0.000000").Replace(",", ".") + ","
         WriteMArchToDB = WriteMArchToDB + Format(mArch.v4, "##############0.000000").Replace(",", ".") + ","
-        WriteMArchToDB = WriteMArchToDB + Format(mArch.V5, "##############0.000000").Replace(",", ".") + ","
-        WriteMArchToDB = WriteMArchToDB + Format(mArch.V6, "##############0.000000").Replace(",", ".") + ","
+        WriteMArchToDB = WriteMArchToDB + Format(mArch.v5, "##############0.000000").Replace(",", ".") + ","
+        WriteMArchToDB = WriteMArchToDB + Format(mArch.v6, "##############0.000000").Replace(",", ".") + ","
 
         WriteMArchToDB = WriteMArchToDB + Format(mArch.p1, "##############0.000000").Replace(",", ".") + ","
         WriteMArchToDB = WriteMArchToDB + Format(mArch.p2, "##############0.000000").Replace(",", ".") + ","
@@ -1598,7 +1784,7 @@ Public Class driver
     End Function
 
 
-   
+
 
     Private mIsError As Boolean
 
@@ -1841,7 +2027,7 @@ Public Class driver
         If E <> 0 Then
             E = E - 2
         End If
-        
+
         If floatStr(1) And (2 ^ 7) Then
             s = 1
         Else
@@ -2009,11 +2195,13 @@ Public Class driver
 
     Public Sub New()
 
-        HCash = New Dictionary(Of String, CashItem)
-        DCash = New Dictionary(Of String, CashItem)
-        lastD = GetDeviceDate()
-        lastH = GetDeviceDate()
-        
+        HCash = New STKTVMain.XmlSerializableDictionary(Of String, CashItem)
+        DCash = New STKTVMain.XmlSerializableDictionary(Of String, CashItem)
+        EarliestCacheDate = GetDeviceDate()
+        EarliestCacheHour = GetDeviceDate()
+        LatestCahceDate = GetDeviceDate()
+        LatestCacheHour = GetDeviceDate()
+
     End Sub
  
 End Class

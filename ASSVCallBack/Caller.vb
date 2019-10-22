@@ -2,6 +2,7 @@
 Imports STKTVMain
 Imports System.IO.Ports
 Imports System.Xml
+Imports NLog
 
 
 Public Class Caller
@@ -9,6 +10,7 @@ Public Class Caller
 
     Dim tvmain As STKTVMain.TVMain
     Dim port As System.IO.Ports.SerialPort
+    Private Shared Logger As Logger = LogManager.GetCurrentClassLogger()
 
     Private Shared Function GetMyDir() As String
         Dim s As String
@@ -39,12 +41,13 @@ Public Class Caller
     Private Sub LOG(ByVal s As String)
         CheckLog()
         If m_LogEnabled Then
-        Try
-                System.IO.File.AppendAllText(GetMyDir() + "\LOGS\ASSV_LOG_" + Date.Now.ToString("yyyyMMdd") + "_.txt", Date.Now.ToString("yyyy.MM.dd HH:mm:ss") + " " + s + vbCrLf)
-        Catch ex As Exception
+            'Try
+            '        System.IO.File.AppendAllText(GetMyDir() + "\LOGS\ASSV_LOG_" + Date.Now.ToString("yyyyMMdd") + "_.txt", Date.Now.ToString("yyyy.MM.dd HH:mm:ss") + " " + s + vbCrLf)
+            'Catch ex As Exception
 
-        End Try
-        Console.WriteLine(s)
+            'End Try
+            'Console.WriteLine(s)
+            Logger.Info(s)
         End If
     End Sub
 
