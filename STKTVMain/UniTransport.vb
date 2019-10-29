@@ -1849,12 +1849,13 @@ Public Class GRPSTransport
             CntRead = count
         End If
 
+        LOG(">>r" + CntRead.ToString + " ")
         For i = 0 To CntRead - 1
             buffer(i + offset) = dataBuffer(i)
+            LOG(buffer(i + offset).ToString("X02") + " ")
         Next
 
 
-        Log(">>r" + CntRead.ToString + " >>")
 
         BytesReceived += CntRead
         SendEvent(UnitransportAction.ReceiveData, "")

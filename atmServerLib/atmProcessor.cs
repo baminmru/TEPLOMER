@@ -421,7 +421,7 @@ namespace atmServer
                         }
 
 
-                        if (TvMain.TVD.IsConnected() && ccurr && ddd <= SrvDate)
+                        if (TvMain.TVD.IsConnected() && aSocket.Connected() && ccurr && ddd <= SrvDate)
                         {
                             DateTime tempdate;
                             Double nmin;
@@ -509,7 +509,7 @@ namespace atmServer
                         }
 
 
-                        if (TvMain.TVD.IsConnected() && csum && ddd <= SrvDate)
+                        if (TvMain.TVD.IsConnected() && aSocket.Connected() && csum && ddd <= SrvDate)
                         {
                             DateTime tempdate;
                             Double nmin;
@@ -586,7 +586,7 @@ if (TvMain.Status.Contains("atm")){
                         }
 
                         // hour
-                        if (TvMain.TVD.IsConnected() && chour && ddd <= SrvDate)
+                        if (TvMain.TVD.IsConnected() && aSocket.Connected() && chour && ddd <= SrvDate)
                         {
 
                            
@@ -614,7 +614,7 @@ if (TvMain.Status.Contains("atm")){
                                             goto ClosePlan;
                                         }
 
-                                        if (TvMain.TVD.IsConnected())
+                                        if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                         {
                                             try
                                             {
@@ -703,7 +703,7 @@ if (TvMain.Status.Contains("atm")){
                                             goto ClosePlan;
                                         }
 
-                                        if (TvMain.TVD.IsConnected())
+                                        if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                         {
                                             try
                                             {
@@ -768,7 +768,7 @@ if (TvMain.Status.Contains("atm")){
                                     }// end for
 
                                     // сдвигаем указатель на нужное количество минут
-                                    if (TvMain.TVD.IsConnected())
+                                    if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                     {
                                        // TvMain.SetTimeToPlanCall(id_bdc.ToString(), "dnexthour", SrvDate);
                                         TvMain.AddMinutesToPlanCall(id_bdc.ToString(), "dnexthour", icall);
@@ -803,7 +803,7 @@ if (TvMain.Status.Contains("atm")){
 
 
                         // day
-                        if (TvMain.TVD.IsConnected() && c24 && ddd <= SrvDate)
+                        if (TvMain.TVD.IsConnected() && aSocket.Connected() && c24 && ddd <= SrvDate)
                         {
 
 
@@ -832,7 +832,7 @@ if (TvMain.Status.Contains("atm")){
                                             {
                                                 goto ClosePlan;
                                             }
-                                            if (TvMain.TVD.IsConnected())
+                                            if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                             {
                                                 tempdate = tempdate.AddDays(1);
 
@@ -918,7 +918,7 @@ if (TvMain.Status.Contains("atm")){
                                                 goto ClosePlan;
                                             }
 
-                                            if (TvMain.TVD.IsConnected())
+                                            if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                             {
                                                 TvMain.HoldLine();
                                                 tempdate = tempdate.AddDays(1);
@@ -971,7 +971,7 @@ if (TvMain.Status.Contains("atm")){
                                             }
 
                                         }//for (int j = 0; j <= razn.Days; j++)
-                                        if (TvMain.TVD.IsConnected())
+                                        if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                         {
                                             TvMain.AddHourToPlanCall(id_bdc.ToString(), "dnext24", Convert.ToInt32(dr["icall24"].ToString()));
                                         }
@@ -1020,7 +1020,7 @@ if (TvMain.Status.Contains("atm")){
                                     }
 
                                     tempdate = (DateTime)(missing.Rows[j]["QDATE"]);
-                                    if (TvMain.TVD.IsConnected())
+                                    if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                     {
                                         TvMain.HoldLine();
 
@@ -1121,7 +1121,7 @@ if (TvMain.Status.Contains("atm")){
                                         goto ClosePlan;
                                     }
                                     tempdate = (DateTime)(missing.Rows[j]["QDATE"]);
-                                    if (TvMain.TVD.IsConnected())
+                                    if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                     {
                                         TvMain.HoldLine();
 
@@ -1250,7 +1250,7 @@ if (TvMain.Status.Contains("atm")){
                                         }
                                     }
 
-                                    if (TvMain.TVD.IsConnected())
+                                    if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                     {
                                         TvMain.HoldLine();
                                            if (GetRow)
@@ -1370,7 +1370,7 @@ if (TvMain.Status.Contains("atm")){
                                         }
                                     }
 
-                                    if (TvMain.TVD.IsConnected())
+                                    if (TvMain.TVD.IsConnected() && aSocket.Connected())
                                     {
                                         TvMain.HoldLine();
                                            if (GetRow)

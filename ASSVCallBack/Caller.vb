@@ -38,7 +38,9 @@ Public Class Caller
         m_Inited = True
     End Sub
 
-    Private Sub LOG(ByVal s As String)
+    Private Sub LOG(ByVal s As String, ByVal ID_BD As String)
+        NLog.GlobalDiagnosticsContext.Set("counter", "_" & ID_BD & "_ASSV")
+        NLog.GlobalDiagnosticsContext.Set("id", ID_BD)
         CheckLog()
         If m_LogEnabled Then
             'Try
@@ -75,7 +77,7 @@ Public Class Caller
             dt = tvmain.QuerySelect("select cphone, bdevices.id_bd from bdevices join bmodems  on bdevices.id_bd=bmodems.id_bd join plancall on bdevices.id_bd=plancall.id_bd   where transport = 5 And npquery = 1 And (dlastcall is null or dlastcall < sysdate - 1 / 24 / 6 ) and (nplock is null or nplock < sysdate)  and ( (plancall.chour=1 and nvl(plancall.DNEXTHOUR,sysdate-1)<=sysdate) or (plancall.ccurr=1 and nvl(plancall.dnextcurr,sysdate-1) <=sysdate) or (plancall.c24=1 and nvl(plancall.dnext24 ,sysdate-1)<=sysdate)  or (plancall.csum=1 and nvl(plancall.dnextsum ,sysdate-1)<=sysdate) or (bdevices.id_bd in (select distinct id_bd from qlist)) or bdevices.id_bd in (select distinct id_bd from missingarch where archdate < sysdate -1 ) ) order by plancall.dlastcall desc")
             Dim i As Integer
             For i = 0 To dt.Rows.Count - 1
-                LOG("Processing device " + dt.Rows(i)("id_bd").ToString())
+                LOG("Processing device " + dt.Rows(i)("id_bd").ToString(), dt.Rows(i)("id_bd").ToString())
                 dt1 = tvmain.QuerySelect("select cphone, bdevices.id_bd from bdevices join bmodems  on bdevices.id_bd=bmodems.id_bd join plancall on bdevices.id_bd=plancall.id_bd   where transport = 5 And npquery = 1 And (dlastcall is null or dlastcall < sysdate - 1 / 24 / 6 )  and (nplock is null or nplock < sysdate)  and ( (plancall.chour=1 and nvl(plancall.DNEXTHOUR,sysdate-1)<=sysdate) or (plancall.ccurr=1 and nvl(plancall.dnextcurr,sysdate-1) <=sysdate) or (plancall.c24=1 and nvl(plancall.dnext24 ,sysdate-1)<=sysdate)  or (plancall.csum=1 and nvl(plancall.dnextsum ,sysdate-1)<=sysdate) or (bdevices.id_bd in (select distinct id_bd from qlist)) or bdevices.id_bd in (select distinct id_bd from missingarch where archdate < sysdate -1 ) ) and bdevices.id_bd=" & dt.Rows(i)("id_bd").ToString())
                 If dt1.Rows.Count > 0 Then
 
@@ -97,7 +99,7 @@ Public Class Caller
 
 
 
-    Private Function WaitOK(Optional ByVal WaitStr As String = "OK", Optional ByVal Timeout As Integer = 30000, Optional ByRef ReceivedString As String = Nothing) As Boolean
+    Private Function WaitOK(ByVal id As String, Optional ByVal WaitStr As String = "OK", Optional ByVal Timeout As Integer = 30000, Optional ByRef ReceivedString As String = Nothing) As Boolean
 
         Dim i As Int16
         Dim j As Int16
@@ -112,7 +114,7 @@ Public Class Caller
 
         For i = 1 To 100
             System.Threading.Thread.Sleep(Timeout / 100)
-            If i Mod 10 = 0 Then LOG("wait for answer " + i.ToString + "%")
+            If i Mod 10 = 0 Then LOG("wait for answer " + i.ToString + "%", id)
             btr = port.BytesToRead
 
             If btr > 0 Then
@@ -136,7 +138,7 @@ Public Class Caller
 
                 bufStr = bufStr.Replace(vbCrLf, " ")
 
-                LOG("<<wait for:" + WaitStr + "<< received:" + bufStr)
+                LOG("<<wait for:" + WaitStr + "<< received:" + bufStr, id)
 
                 If bufStr.ToLower().IndexOf(WaitStr.ToLower) >= 0 Then
                     If Not ReceivedString Is Nothing Then
@@ -178,7 +180,7 @@ Public Class Caller
         For j = 0 To sz - 1
             bufStr = bufStr + Chr(buf2(j))
         Next
-        LOG("<<" + WaitStr + "<<" + bufStr)
+        LOG("<<" + WaitStr + "<<" + bufStr, id)
         bufStr = bufStr.Replace(vbCrLf, "")
 
         If bufStr.IndexOf("ERROR") >= 0 Then
@@ -209,7 +211,7 @@ Public Class Caller
 
     Private Sub CallASSV(ByVal pnum As String, ByVal id As String)
         If Trim(pnum & "") = "" Then
-            LOG("Phone num is empty")
+            LOG("Phone num is empty", id)
             Exit Sub
         End If
         Dim callOK As Boolean = False
@@ -219,7 +221,7 @@ Public Class Caller
         System.Threading.Thread.Sleep(2000)
         portname = tvmain.GetNextModem("G")
         If portname <> "" Then
-            LOG("Use " & portname & vbCrLf)
+            LOG("Use " & portname & vbCrLf, id)
             port = New SerialPort
             port.PortName = portname
             initstr = tvmain.GetModemINIT()
@@ -241,59 +243,59 @@ Public Class Caller
 
                 If initstr <> "" Then
 
-                   
 
-                    LOG("atz" & vbCrLf)
+
+                    LOG("atz" & vbCrLf, id)
                     port.Write("atez" & vbCrLf)
                     System.Threading.Thread.Sleep(1000)
-                    WaitOK()
+                    WaitOK(id)
 
-                    LOG("at&f" & vbCrLf)
+                    LOG("at&f" & vbCrLf, id)
                     port.Write("at&f" & vbCrLf)
                     System.Threading.Thread.Sleep(1000)
-                    WaitOK()
+                    WaitOK(id)
 
-                    LOG(initstr & vbCrLf)
+                    LOG(initstr & vbCrLf, id)
                     port.Write(initstr & vbCrLf)
                     System.Threading.Thread.Sleep(1000)
-                    WaitOK()
+                    WaitOK(id)
 
-                    LOG("ate0" & vbCrLf)
+                    LOG("ate0" & vbCrLf, id)
                     port.Write("ate0" & vbCrLf)
                     System.Threading.Thread.Sleep(1000)
                 Else
-                   
-                    LOG("atz" & vbCrLf)
+
+                    LOG("atz" & vbCrLf, id)
                     port.Write("atez" & vbCrLf)
                     System.Threading.Thread.Sleep(1000)
-                    WaitOK()
+                    WaitOK(id)
 
-                    LOG("at&f" & vbCrLf)
+                    LOG("at&f" & vbCrLf, id)
                     port.Write("at&f" & vbCrLf)
                     System.Threading.Thread.Sleep(1000)
-                    WaitOK()
+                    WaitOK(id)
 
 
-                    LOG("ate0" & vbCrLf)
+                    LOG("ate0" & vbCrLf, id)
                     port.Write("ate0" & vbCrLf)
                     System.Threading.Thread.Sleep(1000)
                 End If
-                WaitOK()
+                WaitOK(id)
 
-                LOG("at+CFUN=1" & vbCrLf)
+                LOG("at+CFUN=1" & vbCrLf, id)
                 port.Write("at+CFUN=1" & vbCrLf)
                 System.Threading.Thread.Sleep(10000)
-                WaitOK()
+                WaitOK(id)
 
-                LOG("at+CREG=1" & vbCrLf)
+                LOG("at+CREG=1" & vbCrLf, id)
                 port.Write("at+CREG=1" & vbCrLf)
                 System.Threading.Thread.Sleep(5000)
-                WaitOK()
+                WaitOK(id)
 
-                LOG("AT+COPS=0" & vbCrLf)
+                LOG("AT+COPS=0" & vbCrLf, id)
                 port.Write("AT+COPS=0" & vbCrLf)
                 System.Threading.Thread.Sleep(5000)
-                WaitOK()
+                WaitOK(id)
 
 
 
@@ -301,31 +303,31 @@ Public Class Caller
                 Dim callnum As String
                 callnum = "ATD" & pnum.Replace("-", "") & ";" & vbCrLf
                 port.Write(callnum)
-                LOG("call " + pnum + " for deviceid=" + id)
+                LOG("call " + pnum + " for deviceid=" + id, id)
 
-                If WaitOK("BUSY", 60000) Then
+                If WaitOK(id, "BUSY", 60000) Then
                     port.DiscardInBuffer()
-                    LOG("CALL OK!!!")
+                    LOG("CALL OK!!!", id)
 
                     callOK = True
                 End If
 
-                LOG("ATH0" & vbCrLf)
+                LOG("ATH0" & vbCrLf, id)
                 port.Write("ATH0" & vbCrLf)
-                WaitOK()
+                WaitOK(id)
 
                 If callOK Then
                     tvmain.QueryExec("update plancall set dlastcall = sysdate where id_bd=" + id)
                     tvmain.SaveLog(Integer.Parse(id), 0, portname.Replace("COM", ""), 0, "Успешный вызов АССВ " + pnum)
                 Else
-                    LOG("ATH0" & vbCrLf)
+                    LOG("ATH0" & vbCrLf, id)
                     port.Write("ATH0" & vbCrLf)
-                    WaitOK()
+                    WaitOK(id)
                     tvmain.SaveLog(Integer.Parse(id), 0, portname.Replace("COM", ""), 0, "Неудачный вызов АССВ " + pnum)
-                    LOG("restart at+CFUN=1,1" & vbCrLf)
+                    LOG("restart at+CFUN=1,1" & vbCrLf, id)
                     port.Write("at+CFUN=1,1" & vbCrLf)
                     System.Threading.Thread.Sleep(10000)
-                    WaitOK()
+                    WaitOK(id)
                 End If
 
 
@@ -334,13 +336,13 @@ Public Class Caller
                 port.DtrEnable = False
                 port.Close()
             Else
-                LOG("Port open error")
+                LOG("Port open error", id)
             End If
 
             tvmain.FreeModem()
-            LOG("Free modem")
+            LOG("Free modem", id)
         Else
-            LOG("No modem found")
+            LOG("No modem found", id)
         End If
 
 
